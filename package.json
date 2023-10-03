@@ -27,7 +27,8 @@
     "prettier": "3.0.3",
     "stylelint": "^15.10.3",
     "stylelint-config-standard": "^34.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-plugin-css-modules": "^5.0.1"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
