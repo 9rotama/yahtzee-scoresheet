@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Container, DropdownMenu, Flex } from "@radix-ui/themes";
-import { FiAlignJustify, FiArrowLeft } from "react-icons/fi";
+import { FiAlignJustify } from "react-icons/fi";
 import Logo from "../Logo";
 import styles from "./DefaultHeader.module.css";
 
@@ -17,11 +17,7 @@ export default function DefaultHeader() {
   return (
     <Container className={styles.container} p="2" size="2">
       <Flex align="center" direction="row" justify="between">
-        <div className={styles.headerLeft}>
-          <Button variant="ghost" color="iris">
-            <FiArrowLeft size={20} color="#000000" />
-          </Button>
-        </div>
+        <div className={styles.headerLeft} />
         <div className={styles.headerCenter}>
           <Logo size={40} />
         </div>
