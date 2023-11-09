@@ -11,6 +11,7 @@ import {
   Text,
   TextField,
 } from "@radix-ui/themes";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import styles from "./PlayerList.module.css";
@@ -119,6 +120,7 @@ export default function PlayerList() {
       );
     };
   };
+
   return (
     <Flex gap="2" direction="column">
       <Flex className={styles.scroll} pl="3" pr="3" gap="2">
@@ -138,34 +140,49 @@ export default function PlayerList() {
               </Text>
             </Flex>
           ) : null}
-          {playerList.map((player, i) => (
-            <Card key={i}>
-              <Flex key={player.name} align="center" gap="4" justify="between">
-                <Flex align="center" direction="row" gap="2">
-                  <PlayerColorDot colorHue={player.colorHue} size={10} />
-                  <Text size="2" className={styles.playerName}>
-                    {player.name}
-                  </Text>
-                </Flex>
-
-                <Flex align="center" gap="3">
-                  <PlayerEditPopover
-                    name={player.name}
-                    colorHue={player.colorHue}
-                    editPlayer={editPlayer(i)}
-                  />
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      removePlayer(i);
-                    }}
+          <AnimatePresence>
+            {playerList.map((player, i) => (
+              <motion.div
+                key={`player${i}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                exit={{ opacity: 0 }}
+              >
+                <Card>
+                  <Flex
+                    key={player.name}
+                    align="center"
+                    gap="4"
+                    justify="between"
                   >
-                    <FiTrash color="#333333" />
-                  </Button>
-                </Flex>
-              </Flex>
-            </Card>
-          ))}
+                    <Flex align="center" direction="row" gap="2">
+                      <PlayerColorDot colorHue={player.colorHue} size={10} />
+                      <Text size="2" className={styles.playerName}>
+                        {player.name}
+                      </Text>
+                    </Flex>
+
+                    <Flex align="center" gap="3">
+                      <PlayerEditPopover
+                        name={player.name}
+                        colorHue={player.colorHue}
+                        editPlayer={editPlayer(i)}
+                      />
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          removePlayer(i);
+                        }}
+                      >
+                        <FiTrash color="#333333" />
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </Flex>
       </Flex>
       <Button onClick={addPlayer} color="jade" variant="outline" size="2">
