@@ -1,11 +1,11 @@
 "use client";
 
+import MovePageButton from "@/components/MovePageButton";
 import PlayerList from "@/features/player/components/PlayerList";
-import { Button, Container, Flex, Heading, Text } from "@radix-ui/themes";
+import { Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowRight } from "react-icons/fi";
 import styles from "./page.module.css";
 
 export default function PlayerPage() {
@@ -37,12 +37,11 @@ export default function PlayerPage() {
             </div>
           </Flex>
           <Link href="/rule">
-            <Button size="4" color="jade" radius="full">
+            <MovePageButton direction="next">
               <Text size="2" weight="bold">
                 決定してルール選択
               </Text>
-              <FiArrowRight />
-            </Button>
+            </MovePageButton>
           </Link>
         </Flex>
       </Container>

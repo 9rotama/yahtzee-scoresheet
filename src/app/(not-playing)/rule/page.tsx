@@ -1,16 +1,9 @@
 "use client";
-import {
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Select,
-  Text,
-} from "@radix-ui/themes";
+import MovePageButton from "@/components/MovePageButton";
+import { Container, Flex, Heading, Select, Text } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import styles from "./page.module.css";
 
 export default function RulePage() {
@@ -48,31 +41,18 @@ export default function RulePage() {
 
           <Flex align="center" gap="1" direction="column">
             <Link href="" className={styles.fullWidth}>
-              <Button
-                size="4"
-                color="jade"
-                radius="full"
-                className={styles.fullWidth}
-              >
+              <MovePageButton direction="next">
                 <Text size="2" weight="bold">
                   ゲームを始める
                 </Text>
-                <FiArrowRight />
-              </Button>
+              </MovePageButton>
             </Link>
             <Link href="/player">
-              <Button
-                size="4"
-                color="gray"
-                radius="full"
-                variant="outline"
-                className={styles.fullWidth}
-              >
-                <FiArrowLeft />
+              <MovePageButton direction="prev" color="gray" variant="outline">
                 <Text size="2" weight="bold">
                   プレイヤー登録に戻る
                 </Text>
-              </Button>
+              </MovePageButton>
             </Link>
           </Flex>
         </Flex>
