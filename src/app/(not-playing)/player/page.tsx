@@ -1,6 +1,7 @@
 import PlayerList from "@/features/player/components/PlayerList";
 import { Button, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import Image from "next/image";
+import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import styles from "./page.module.css";
 
@@ -27,12 +28,14 @@ export default function PlayerPage() {
             <PlayerList />
           </div>
         </Flex>
-        <Button size="4" color="jade" radius="full">
-          <Text size="2" weight="bold">
-            決定してルール選択
-          </Text>
-          <FiArrowRight />
-        </Button>
+        <Link href="/rule">
+          <Button size="4" color="jade" radius="full">
+            <Text size="2" weight="bold">
+              決定してルール選択
+            </Text>
+            <FiArrowRight />
+          </Button>
+        </Link>
       </Flex>
     </Container>
   );
