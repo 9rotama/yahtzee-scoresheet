@@ -2,6 +2,7 @@
 
 import MovePageButton from "@/components/MovePageButton";
 import PlayerList from "@/features/player/components/PlayerList";
+import usePlayerList from "@/features/player/hooks/usePlayerList";
 import { Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -9,6 +10,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function PlayerPage() {
+  const { playerList, addPlayer, removePlayer, editPlayer } = usePlayerList();
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -33,7 +35,12 @@ export default function PlayerPage() {
               遊ぶ人を追加
             </Heading>
             <div className={styles.playerList}>
-              <PlayerList />
+              <PlayerList
+                playerList={playerList}
+                addPlayer={addPlayer}
+                removePlayer={removePlayer}
+                editPlayer={editPlayer}
+              />
             </div>
           </Flex>
           <Link href="/rule">

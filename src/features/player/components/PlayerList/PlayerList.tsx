@@ -16,15 +16,17 @@ import { useState } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import styles from "./PlayerList.module.css";
 
-type PlayerSetting = {
-  name: string;
-  colorHue: number;
-};
-
 type PlayerEditPopoverProps = {
   name: string;
   colorHue: number;
   editPlayer: (name: string, colorHue: number) => void;
+};
+
+type PlayerListProps = {
+  playerList: PlayerSetting[];
+  addPlayer: () => void;
+  removePlayer: (idx: number) => void;
+  editPlayer: (idx: number) => (name: string, colorHue: number) => void;
 };
 
 function PlayerEditPopover(props: PlayerEditPopoverProps) {
@@ -94,33 +96,12 @@ function PlayerEditPopover(props: PlayerEditPopoverProps) {
   );
 }
 
-export default function PlayerList() {
-  const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
-  const [playerNum, setPlayerNum] = useState<number>(0);
-  const addPlayer = () => {
-    setPlayerNum(playerNum + 1);
-    setPlayerList([
-      ...playerList,
-      { name: `プレイヤー${playerNum}`, colorHue: 0 },
-    ]);
-  };
-
-  const removePlayer = (idx: number) => {
-    const playerListRemoved = playerList.slice();
-    playerListRemoved.splice(idx, 1);
-    setPlayerList(playerListRemoved);
-  };
-
-  const editPlayer = (idx: number) => {
-    return (name: string, colorHue: number) => {
-      setPlayerList(
-        playerList.map((player, i) =>
-          idx === i ? { name, colorHue } : player,
-        ),
-      );
-    };
-  };
-
+export default function PlayerList({
+  playerList,
+  addPlayer,
+  removePlayer,
+  editPlayer,
+}: PlayerListProps) {
   return (
     <Flex gap="2" direction="column">
       <Flex className={styles.scroll} pl="3" pr="3" gap="2">
