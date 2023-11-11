@@ -1,15 +1,19 @@
 "use client";
 
+import MovePageButton from "@/components/MovePageButton";
 import {
   Box,
   Container,
   Flex,
   Heading,
   Link as RadixThemeLink,
+  Text,
 } from "@radix-ui/themes";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function CreditsPage() {
+  const router = useRouter();
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -44,6 +48,17 @@ export default function CreditsPage() {
               </RadixThemeLink>
             </Box>
           </Flex>
+          <div
+            onClick={() => {
+              router.back();
+            }}
+          >
+            <MovePageButton color="gray" direction="prev" variant="outline">
+              <Text size="2" weight="bold">
+                戻る
+              </Text>
+            </MovePageButton>
+          </div>
         </Flex>
       </Container>
     </motion.div>
