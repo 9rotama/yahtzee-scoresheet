@@ -36,6 +36,7 @@ export default function RulePage() {
             <Select.Root
               size="3"
               defaultValue={rules[0].id}
+              value={rule}
               onValueChange={(value) => {
                 setRule(value);
               }}
@@ -65,7 +66,12 @@ export default function RulePage() {
                 </Text>
               </MovePageButton>
             </Link>
-            <Link href="/player">
+            <Link
+              href="/player"
+              onClick={() => {
+                saveRule(rule);
+              }}
+            >
               <MovePageButton direction="prev" color="gray" variant="outline">
                 <Text size="2" weight="bold">
                   プレイヤー登録に戻る
