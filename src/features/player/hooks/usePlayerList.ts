@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { db } from "@/libs/db";
+import { useEffect, useState } from "react";
 
 export default function usePlayerList() {
   const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
@@ -27,5 +28,30 @@ export default function usePlayerList() {
     };
   };
 
-  return { playerList, addPlayer, removePlayer, editPlayer };
+  useEffect(() => {
+    db.playerList.toArray().then((data) => setPlayerList(data));
+  }, []);
+
+  const savePlayerList = async () => {
+    const add = async (player: PlayerSetting) => {
+      try {
+        const id = await db.playerList.add({
+          name: player.name,
+          colorHue: player.colorHue,
+        });
+        console.log(id);
+      } catch (error) {
+        throw new Error(`failed to add ${player.name}: ${error}`);
+      }
+    };
+
+    await db.playerList.clear();
+    await Promise.all(playerList.map(async (player) => add(player))).then(
+      () => {
+        console.log("player register success");
+      },
+    );
+  };
+
+  return { playerList, addPlayer, removePlayer, editPlayer, savePlayerList };
 }

@@ -10,7 +10,8 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function PlayerPage() {
-  const { playerList, addPlayer, removePlayer, editPlayer } = usePlayerList();
+  const { playerList, addPlayer, removePlayer, editPlayer, savePlayerList } =
+    usePlayerList();
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -43,7 +44,12 @@ export default function PlayerPage() {
               />
             </div>
           </Flex>
-          <Link href="/rule">
+          <Link
+            href="/rule"
+            onClick={() => {
+              savePlayerList();
+            }}
+          >
             <MovePageButton direction="next">
               <Text size="2" weight="bold">
                 決定してルール選択
