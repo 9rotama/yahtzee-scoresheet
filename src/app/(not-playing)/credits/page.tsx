@@ -26,7 +26,10 @@ export default function CreditsPage() {
               イラスト
             </Heading>
             <Box>
-              <RadixThemeLink href="https://dac.tsukuba.ac.jp/radd/joint-base/manga/illust/">
+              <RadixThemeLink
+                color="jade"
+                href="https://dac.tsukuba.ac.jp/radd/joint-base/manga/illust/"
+              >
                 筑波大学 RADD 発達障害啓発マンガのイラストギャラリー
               </RadixThemeLink>
             </Box>
@@ -36,7 +39,9 @@ export default function CreditsPage() {
               制作
             </Heading>
             <Box>
-              <RadixThemeLink href="https://9rtm.com">9rotama</RadixThemeLink>
+              <RadixThemeLink color="jade" href="https://9rtm.com">
+                9rotama
+              </RadixThemeLink>
             </Box>
           </Flex>
         </Flex>
