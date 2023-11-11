@@ -2,3 +2,16 @@ body {
   margin: 0;
   padding: 0;
 }
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:active {
+  color: #000;
+}
+
+a:focus {
+  outline: none;
+}
