@@ -39,18 +39,13 @@ export default function usePlayerList() {
           name: player.name,
           colorHue: player.colorHue,
         });
-        console.log(id);
       } catch (error) {
         throw new Error(`failed to add ${player.name}: ${error}`);
       }
     };
 
     await db.playerList.clear();
-    await Promise.all(playerList.map(async (player) => add(player))).then(
-      () => {
-        console.log("player register success");
-      },
-    );
+    await Promise.all(playerList.map(async (player) => add(player)));
   };
 
   return { playerList, addPlayer, removePlayer, editPlayer, savePlayerList };
