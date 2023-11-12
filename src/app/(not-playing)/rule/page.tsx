@@ -54,7 +54,7 @@ export default function RulePage() {
 
           <Flex align="center" gap="1" direction="column">
             <Link
-              href=""
+              href="/play"
               className={styles.fullWidth}
               onClick={() => {
                 saveRule(rule);
