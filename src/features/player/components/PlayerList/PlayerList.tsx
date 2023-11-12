@@ -38,8 +38,8 @@ function PlayerEditPopover(props: PlayerEditPopoverProps) {
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Button variant="ghost">
-          <FiEdit color="#333333" />
+        <Button variant="soft" color="jade">
+          <FiEdit />
         </Button>
       </Popover.Trigger>
 
@@ -144,19 +144,20 @@ export default function PlayerList({
                       </Text>
                     </Flex>
 
-                    <Flex align="center" gap="3">
+                    <Flex align="center" gap="1">
                       <PlayerEditPopover
                         name={player.name}
                         colorHue={player.colorHue}
                         editPlayer={editPlayer(i)}
                       />
                       <Button
-                        variant="ghost"
+                        variant="soft"
+                        color="gray"
                         onClick={() => {
                           removePlayer(i);
                         }}
                       >
-                        <FiTrash color="#333333" />
+                        <FiTrash />
                       </Button>
                     </Flex>
                   </Flex>
