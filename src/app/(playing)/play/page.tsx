@@ -1,9 +1,21 @@
+"use client";
+
+import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
+import { Container } from "@radix-ui/themes";
+import { motion } from "framer-motion";
 import styles from "./page.module.css";
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function PlayPage({ children }: Props) {
-  return <div className={styles.module}>{children}</div>;
+export default function PlayPage() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={styles.bottom}
+    >
+      <Container p="2" size="2">
+        <ScoresheetYams />
+      </Container>
+    </motion.div>
+  );
 }
