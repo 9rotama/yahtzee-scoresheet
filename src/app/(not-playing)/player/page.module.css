@@ -1,0 +1,11 @@
+.module {
+  display: block;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.playerList {
+  width: 80%;
+}

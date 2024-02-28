@@ -1,0 +1,11 @@
+.module {
+  position: static;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.buttonWidth {
+  width: 300px;
+}

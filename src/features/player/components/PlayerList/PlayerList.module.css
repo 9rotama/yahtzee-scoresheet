@@ -1,0 +1,17 @@
+.scroll {
+  height: 200px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.playerName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.playerColorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
