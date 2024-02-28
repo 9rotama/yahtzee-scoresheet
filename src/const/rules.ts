@@ -1,4 +1,4 @@
 export const rules: Rule[] = [
-  { id: "yathzee", name: "ヤッツィー" },
+  { id: "yahtzee", name: "ヤッツィー" },
   { id: "yams", name: "ヤムス" },
 ];

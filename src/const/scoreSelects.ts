@@ -2,7 +2,7 @@ import { range } from "@/utils/range";
 
 export const NUM_DICE = 5;
 
-const SCORE_SELECTS_YATHZEE_NUMBER: { [key in YahtzeeCategories]: number[] } = {
+const SCORE_SELECTS_YAHTZEE_NUMBER: { [key in YahtzeeCategories]: number[] } = {
   aces: [...Array(NUM_DICE + 1)].map((_, i) => i),
   twos: [...Array(NUM_DICE + 1)].map((_, i) => i * 2),
   threes: [...Array(NUM_DICE + 1)].map((_, i) => i * 3),
@@ -15,11 +15,11 @@ const SCORE_SELECTS_YATHZEE_NUMBER: { [key in YahtzeeCategories]: number[] } = {
   sStraight: [0, 30],
   lStraight: [0, 40],
   chance: range(5, 6 * NUM_DICE),
-  yathzee: [0, 50],
+  yahtzee: [0, 50],
 };
 
-export const SCORE_SELECTS_YATHZEE = Object.fromEntries(
-  Object.entries(SCORE_SELECTS_YATHZEE_NUMBER).map(([key, value]) => [
+export const SCORE_SELECTS_YAHTZEE = Object.fromEntries(
+  Object.entries(SCORE_SELECTS_YAHTZEE_NUMBER).map(([key, value]) => [
     key,
     Array.isArray(value) ? value.map(String) : value,
   ]),
@@ -39,7 +39,7 @@ const SCORE_SELECTS_YAMS_NUMBER: { [key in YamsCategories]: number[] } = {
   sStraight: [0, 45],
   lStraight: [0, 50],
   rigole: [0, 50],
-  yathzee: [0, ...[...Array(6)].map((_, i) => 50 + (i + 1) * NUM_DICE)],
+  yahtzee: [0, ...[...Array(6)].map((_, i) => 50 + (i + 1) * NUM_DICE)],
 };
 
 export const SCORE_SELECTS_YAMS = Object.fromEntries(

@@ -11,7 +11,7 @@ type YahtzeeCategories =
   | "sStraight"
   | "lStraight"
   | "chance"
-  | "yathzee";
+  | "yahtzee";
 
 type YamsCategories =
   | "aces"
@@ -27,4 +27,4 @@ type YamsCategories =
   | "sStraight"
   | "lStraight"
   | "rigole"
-  | "yathzee";
+  | "yahtzee";

@@ -144,8 +144,8 @@ export default function ScoresheetYams() {
             <Table.Cell>ヤッツィー</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="yathzee"
-                selects={SCORE_SELECTS_YAMS.yathzee}
+                name="yahtzee"
+                selects={SCORE_SELECTS_YAMS.yahtzee}
               />
             </Table.Cell>
           </Table.Row>

@@ -1,4 +1,4 @@
-import { SCORE_SELECTS_YATHZEE } from "@/const/scoreSelects";
+import { SCORE_SELECTS_YAHTZEE } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import CellWithThumbnail from "../CellWithThumbnail";
@@ -19,7 +19,7 @@ export default function ScoresheetYahtzee() {
               slot={<Text>エース</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="aces" selects={SCORE_SELECTS_YATHZEE.aces} />
+              <ScoreSelect name="aces" selects={SCORE_SELECTS_YAHTZEE.aces} />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -29,7 +29,7 @@ export default function ScoresheetYahtzee() {
               slot={<Text>デュース</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="twos" selects={SCORE_SELECTS_YATHZEE.twos} />
+              <ScoreSelect name="twos" selects={SCORE_SELECTS_YAHTZEE.twos} />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -41,7 +41,7 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>
               <ScoreSelect
                 name="threes"
-                selects={SCORE_SELECTS_YATHZEE.threes}
+                selects={SCORE_SELECTS_YAHTZEE.threes}
               />
             </Table.Cell>
           </Table.Row>
@@ -52,7 +52,7 @@ export default function ScoresheetYahtzee() {
               slot={<Text>フォー</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="fours" selects={SCORE_SELECTS_YATHZEE.fours} />
+              <ScoreSelect name="fours" selects={SCORE_SELECTS_YAHTZEE.fours} />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -62,7 +62,7 @@ export default function ScoresheetYahtzee() {
               slot={<Text>ファイブ</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="fives" selects={SCORE_SELECTS_YATHZEE.fives} />
+              <ScoreSelect name="fives" selects={SCORE_SELECTS_YAHTZEE.fives} />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -72,7 +72,7 @@ export default function ScoresheetYahtzee() {
               slot={<Text>シックス</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="sixes" selects={SCORE_SELECTS_YATHZEE.sixes} />
+              <ScoreSelect name="sixes" selects={SCORE_SELECTS_YAHTZEE.sixes} />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -92,7 +92,7 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>
               <ScoreSelect
                 name="fourDice"
-                selects={SCORE_SELECTS_YATHZEE.threeDice}
+                selects={SCORE_SELECTS_YAHTZEE.threeDice}
               />
             </Table.Cell>
           </Table.Row>
@@ -101,7 +101,7 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>
               <ScoreSelect
                 name="fourDice"
-                selects={SCORE_SELECTS_YATHZEE.fourDice}
+                selects={SCORE_SELECTS_YAHTZEE.fourDice}
               />
             </Table.Cell>
           </Table.Row>
@@ -110,7 +110,7 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>
               <ScoreSelect
                 name="fullHouse"
-                selects={SCORE_SELECTS_YATHZEE.fullHouse}
+                selects={SCORE_SELECTS_YAHTZEE.fullHouse}
               />
             </Table.Cell>
           </Table.Row>
@@ -119,7 +119,7 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>
               <ScoreSelect
                 name="sStraight"
-                selects={SCORE_SELECTS_YATHZEE.sStraight}
+                selects={SCORE_SELECTS_YAHTZEE.sStraight}
               />
             </Table.Cell>
           </Table.Row>
@@ -128,7 +128,7 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>
               <ScoreSelect
                 name="lStraight"
-                selects={SCORE_SELECTS_YATHZEE.lStraight}
+                selects={SCORE_SELECTS_YAHTZEE.lStraight}
               />
             </Table.Cell>
           </Table.Row>
@@ -136,8 +136,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>ヤッツィー</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="yathzee"
-                selects={SCORE_SELECTS_YATHZEE.yathzee}
+                name="yahtzee"
+                selects={SCORE_SELECTS_YAHTZEE.yahtzee}
               />
             </Table.Cell>
           </Table.Row>
