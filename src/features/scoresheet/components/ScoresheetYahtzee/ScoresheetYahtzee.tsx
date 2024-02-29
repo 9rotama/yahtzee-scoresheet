@@ -1,13 +1,55 @@
-import { SCORE_SELECTS_YAHTZEE } from "@/const/scoreSelects";
+import {
+  MIN_SCORE_FOR_BONUS_YAHTZEE,
+  SCORE_SELECTS_YAHTZEE,
+} from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
 import { useState } from "react";
+import { parseScoreToInt } from "../../utils/parseScoreToInt";
 import CellWithThumbnail from "../CellWithThumbnail";
 import ScoreSelect from "../ScoreSelect/ScoreSelect";
 
-type ScoreSelectValuesYahtzee = { [key in YahtzeeCategories]: string };
-
 export default function ScoresheetYahtzee() {
-  const [selectValues, setSelectValues] = useState<ScoreSelectValuesYahtzee>();
+  const rule = "yahtzee";
+  const [allScores, setAllScores] = useState<ScoreSelectValuesYahtzee>({
+    aces: "none",
+    twos: "none",
+    threes: "none",
+    fours: "none",
+    fives: "none",
+    sixes: "none",
+    threeDice: "none",
+    fourDice: "none",
+    fullHouse: "none",
+    sStraight: "none",
+    lStraight: "none",
+    chance: "none",
+    yahtzee: "none",
+  });
+  const upperSectionSum =
+    parseScoreToInt(allScores.aces) +
+    parseScoreToInt(allScores.twos) +
+    parseScoreToInt(allScores.threes) +
+    parseScoreToInt(allScores.fours) +
+    parseScoreToInt(allScores.fives) +
+    parseScoreToInt(allScores.sixes);
+  const bonus = upperSectionSum >= MIN_SCORE_FOR_BONUS_YAHTZEE ? 35 : 0;
+  const bonusDisplay =
+    upperSectionSum > MIN_SCORE_FOR_BONUS_YAHTZEE
+      ? bonus.toString()
+      : `(${upperSectionSum - MIN_SCORE_FOR_BONUS_YAHTZEE})`;
+  const lowerSectionSum =
+    parseScoreToInt(allScores.threeDice) +
+    parseScoreToInt(allScores.fourDice) +
+    parseScoreToInt(allScores.fullHouse) +
+    parseScoreToInt(allScores.sStraight) +
+    parseScoreToInt(allScores.lStraight) +
+    parseScoreToInt(allScores.yahtzee);
+  const total = upperSectionSum + bonus + lowerSectionSum;
+
+  function setValue(category: YahtzeeCategories, newValue: string) {
+    setAllScores((prev) => ({ ...prev, [category]: newValue }));
+  }
+
   return (
     <Flex direction="column" gap="3">
       <Table.Root variant="surface">
@@ -19,7 +61,13 @@ export default function ScoresheetYahtzee() {
               slot={<Text>エース</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="aces" selects={SCORE_SELECTS_YAHTZEE.aces} />
+              <ScoreSelect
+                rule={rule}
+                category="aces"
+                selects={SCORE_SELECTS_YAHTZEE.aces}
+                value={allScores.aces}
+                setValue={setValue}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -29,7 +77,13 @@ export default function ScoresheetYahtzee() {
               slot={<Text>デュース</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="twos" selects={SCORE_SELECTS_YAHTZEE.twos} />
+              <ScoreSelect
+                rule={rule}
+                category="twos"
+                selects={SCORE_SELECTS_YAHTZEE.twos}
+                value={allScores.twos}
+                setValue={setValue}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -40,7 +94,10 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                name="threes"
+                rule={rule}
+                value={allScores.threes}
+                setValue={setValue}
+                category="threes"
                 selects={SCORE_SELECTS_YAHTZEE.threes}
               />
             </Table.Cell>
@@ -52,7 +109,13 @@ export default function ScoresheetYahtzee() {
               slot={<Text>フォー</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="fours" selects={SCORE_SELECTS_YAHTZEE.fours} />
+              <ScoreSelect
+                rule={rule}
+                value={allScores.fours}
+                setValue={setValue}
+                category="fours"
+                selects={SCORE_SELECTS_YAHTZEE.fours}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -62,7 +125,13 @@ export default function ScoresheetYahtzee() {
               slot={<Text>ファイブ</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="fives" selects={SCORE_SELECTS_YAHTZEE.fives} />
+              <ScoreSelect
+                rule={rule}
+                value={allScores.fives}
+                setValue={setValue}
+                category="fives"
+                selects={SCORE_SELECTS_YAHTZEE.fives}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -72,16 +141,26 @@ export default function ScoresheetYahtzee() {
               slot={<Text>シックス</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="sixes" selects={SCORE_SELECTS_YAHTZEE.sixes} />
+              <ScoreSelect
+                rule={rule}
+                value={allScores.sixes}
+                setValue={setValue}
+                category="sixes"
+                selects={SCORE_SELECTS_YAHTZEE.sixes}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>合計</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <Text weight="bold">{upperSectionSum}</Text>
+            </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>ボーナス</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <Text>{bonusDisplay}</Text>
+            </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table.Root>
@@ -91,7 +170,10 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>スリーダイス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="fourDice"
+                rule={rule}
+                value={allScores.threeDice}
+                setValue={setValue}
+                category="threeDice"
                 selects={SCORE_SELECTS_YAHTZEE.threeDice}
               />
             </Table.Cell>
@@ -100,7 +182,10 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>フォーダイス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="fourDice"
+                rule={rule}
+                value={allScores.fourDice}
+                setValue={setValue}
+                category="fourDice"
                 selects={SCORE_SELECTS_YAHTZEE.fourDice}
               />
             </Table.Cell>
@@ -109,7 +194,10 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>フルハウス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="fullHouse"
+                rule={rule}
+                value={allScores.fullHouse}
+                setValue={setValue}
+                category="fullHouse"
                 selects={SCORE_SELECTS_YAHTZEE.fullHouse}
               />
             </Table.Cell>
@@ -118,7 +206,10 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>S.ストレート</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="sStraight"
+                rule={rule}
+                value={allScores.sStraight}
+                setValue={setValue}
+                category="sStraight"
                 selects={SCORE_SELECTS_YAHTZEE.sStraight}
               />
             </Table.Cell>
@@ -127,7 +218,10 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>B.ストレート</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="lStraight"
+                rule={rule}
+                value={allScores.lStraight}
+                setValue={setValue}
+                category="lStraight"
                 selects={SCORE_SELECTS_YAHTZEE.lStraight}
               />
             </Table.Cell>
@@ -136,7 +230,10 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>ヤッツィー</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="yahtzee"
+                rule={rule}
+                value={allScores.yahtzee}
+                setValue={setValue}
+                category="yahtzee"
                 selects={SCORE_SELECTS_YAHTZEE.yahtzee}
               />
             </Table.Cell>
@@ -147,7 +244,9 @@ export default function ScoresheetYahtzee() {
         <Table.Body>
           <Table.Row>
             <Table.Cell>総合得点</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <Text>{total}</Text>
+            </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table.Root>
