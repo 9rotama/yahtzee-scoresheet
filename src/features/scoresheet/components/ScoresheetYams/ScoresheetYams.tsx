@@ -6,6 +6,7 @@ import { Flex, Table, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import { makeZeroOrPositive } from "../../utils/makeZeroOrPositive";
 import { parseScoreToInt } from "../../utils/parseScoreToInt";
+import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
 import ScoreSelect from "../ScoreSelect";
 
@@ -161,13 +162,17 @@ export default function ScoresheetYams() {
           <Table.Row>
             <Table.Cell>合計</Table.Cell>
             <Table.Cell align="right">
-              <Text weight="bold">{upperSectionSum}</Text>
+              <CellValueAutoUpdated
+                slot={<Text weight="bold">{upperSectionSum}</Text>}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>ボーナス</Table.Cell>
             <Table.Cell align="right">
-              <Text weight="bold">{bonusDisplay}</Text>
+              <CellValueAutoUpdated
+                slot={<Text weight={"bold"}>{bonusDisplay}</Text>}
+              />
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -201,7 +206,7 @@ export default function ScoresheetYams() {
           <Table.Row>
             <Table.Cell>デルタ</Table.Cell>
             <Table.Cell align="right">
-              <Text weight="bold">{delta}</Text>
+              <CellValueAutoUpdated slot={<Text weight="bold">{delta}</Text>} />
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -287,7 +292,9 @@ export default function ScoresheetYams() {
           <Table.Row color="jade">
             <Table.Cell>総合得点</Table.Cell>
             <Table.Cell align="right">
-              <Text weight="bold">{total}</Text>
+              <CellValueAutoUpdated
+                slot={<Text weight={"bold"}>{total}</Text>}
+              />
             </Table.Cell>
           </Table.Row>
         </Table.Body>

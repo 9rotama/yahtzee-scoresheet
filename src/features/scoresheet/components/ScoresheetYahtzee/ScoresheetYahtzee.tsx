@@ -5,6 +5,7 @@ import {
 import { Flex, Table, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import { parseScoreToInt } from "../../utils/parseScoreToInt";
+import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
 import ScoreSelect from "../ScoreSelect/ScoreSelect";
 
@@ -153,13 +154,17 @@ export default function ScoresheetYahtzee() {
           <Table.Row>
             <Table.Cell>合計</Table.Cell>
             <Table.Cell align="right">
-              <Text weight="bold">{upperSectionSum}</Text>
+              <CellValueAutoUpdated
+                slot={<Text weight="bold">{upperSectionSum}</Text>}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>ボーナス</Table.Cell>
             <Table.Cell align="right">
-              <Text>{bonusDisplay}</Text>
+              <CellValueAutoUpdated
+                slot={<Text weight={"bold"}>{bonusDisplay}</Text>}
+              />
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -245,7 +250,9 @@ export default function ScoresheetYahtzee() {
           <Table.Row>
             <Table.Cell>総合得点</Table.Cell>
             <Table.Cell align="right">
-              <Text>{total}</Text>
+              <CellValueAutoUpdated
+                slot={<Text weight={"bold"}>{total}</Text>}
+              />
             </Table.Cell>
           </Table.Row>
         </Table.Body>
