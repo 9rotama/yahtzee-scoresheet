@@ -1,8 +1,9 @@
 import PlayerColorDot from "@/components/PlayerColorDot";
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Button, Flex, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { Dispatch, SetStateAction } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import styles from "./PlayerSwitch.module.css";
 
 type Props = {
   playerList: PlayerSetting[];
@@ -32,13 +33,15 @@ export default function PlayerSwitch({
       <Button color="jade" variant="soft" onClick={prevPlayer}>
         <FiArrowLeft />
       </Button>
-      <AnimatePresence>
-        <Box position="relative">
+      <Flex position="relative" width="100%" justify="center">
+        <AnimatePresence>
           <motion.div
             key={playerList[displayingPlayerIdx].name}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+            className={styles.absoluteCenter}
           >
             <Flex gap="3" align="center">
               <PlayerColorDot
@@ -48,8 +51,8 @@ export default function PlayerSwitch({
               <Text size="5">{playerList[displayingPlayerIdx].name}</Text>
             </Flex>
           </motion.div>
-        </Box>
-      </AnimatePresence>
+        </AnimatePresence>
+      </Flex>
       <Button color="jade" variant="soft" onClick={nextPlayer}>
         <FiArrowRight />
       </Button>

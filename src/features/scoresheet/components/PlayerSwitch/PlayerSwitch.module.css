@@ -1,3 +1,8 @@
 .module {
   position: static;
 }
+
+.absoluteCenter {
+  position: absolute;
+  transform: translateY(-50%);
+}
