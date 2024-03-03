@@ -9,10 +9,38 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 
+type PlayerScores = {
+  yahtzee: ScoreSelectValuesYahtzee;
+  yams: ScoreSelectValuesYams;
+};
+
 export default function PlayPage() {
-  const [rule, setRule] = useState<string | null>();
-  const [playerList, setPlayerList] = useState<PlayerSetting[]>();
+  const [rule, setRule] = useState<string | null>(null);
+  const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
   const [displayingPlayerIdx, setDisplayingPlayerIdx] = useState<number>(0);
+  const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
+
+  function setScoresYahtzee(category: YahtzeeCategories) {
+    return (newValue: string) => {
+      setAllPlayerScores((prev) => {
+        if (!prev) return [];
+        const newAllPlayerScores = [...prev];
+        newAllPlayerScores[displayingPlayerIdx].yahtzee[category] = newValue;
+        return newAllPlayerScores;
+      });
+    };
+  }
+
+  function setScoresYams(category: YamsCategories) {
+    return (newValue: string) => {
+      setAllPlayerScores((prev) => {
+        if (!prev) return [];
+        const newAllPlayerScores = [...prev];
+        newAllPlayerScores[displayingPlayerIdx].yams[category] = newValue;
+        return newAllPlayerScores;
+      });
+    };
+  }
 
   useEffect(() => {
     db.rule.toArray().then((data) => {
@@ -20,6 +48,41 @@ export default function PlayPage() {
     });
     db.playerList.toArray().then((data) => {
       setPlayerList(data);
+      setAllPlayerScores(
+        [...new Array(data.length)].map(() => ({
+          yahtzee: {
+            aces: "none",
+            twos: "none",
+            threes: "none",
+            fours: "none",
+            fives: "none",
+            sixes: "none",
+            threeDice: "none",
+            fourDice: "none",
+            fullHouse: "none",
+            sStraight: "none",
+            lStraight: "none",
+            chance: "none",
+            yahtzee: "none",
+          },
+          yams: {
+            aces: "none",
+            twos: "none",
+            threes: "none",
+            fours: "none",
+            fives: "none",
+            sixes: "none",
+            plus: "none",
+            minus: "none",
+            fourDice: "none",
+            fullHouse: "none",
+            sStraight: "none",
+            lStraight: "none",
+            rigole: "none",
+            yahtzee: "none",
+          },
+        })),
+      );
     });
   }, []);
 
@@ -31,7 +94,7 @@ export default function PlayPage() {
       className={styles.bottom}
     >
       <Container p="2" size="2">
-        {playerList ? (
+        {playerList.length !== 0 ? (
           <PlayerSwitch
             playerList={playerList}
             displayingPlayerIdx={displayingPlayerIdx}
@@ -39,11 +102,17 @@ export default function PlayPage() {
           />
         ) : null}
 
-        {rule ? (
+        {allPlayerScores.length !== 0 && rule ? (
           rule === "yahtzee" ? (
-            <ScoresheetYahtzee />
+            <ScoresheetYahtzee
+              scores={allPlayerScores[displayingPlayerIdx].yahtzee}
+              setScores={setScoresYahtzee}
+            />
           ) : (
-            <ScoresheetYams />
+            <ScoresheetYams
+              scores={allPlayerScores[displayingPlayerIdx].yams}
+              setScores={setScoresYams}
+            />
           )
         ) : null}
       </Container>

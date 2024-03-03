@@ -3,53 +3,40 @@ import {
   SCORE_SELECTS_YAHTZEE,
 } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { useState } from "react";
 import { parseScoreToInt } from "../../utils/parseScoreToInt";
 import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
 import ScoreSelect from "../ScoreSelect/ScoreSelect";
 
-export default function ScoresheetYahtzee() {
-  const rule = "yahtzee";
-  const [allScores, setAllScores] = useState<ScoreSelectValuesYahtzee>({
-    aces: "none",
-    twos: "none",
-    threes: "none",
-    fours: "none",
-    fives: "none",
-    sixes: "none",
-    threeDice: "none",
-    fourDice: "none",
-    fullHouse: "none",
-    sStraight: "none",
-    lStraight: "none",
-    chance: "none",
-    yahtzee: "none",
-  });
+type ScoresheetYahtzeeProps = {
+  scores: ScoreSelectValuesYahtzee;
+  setScores: (category: YahtzeeCategories) => (newValue: string) => void;
+};
+
+export default function ScoresheetYahtzee({
+  scores,
+  setScores,
+}: ScoresheetYahtzeeProps) {
   const upperSectionSum =
-    parseScoreToInt(allScores.aces) +
-    parseScoreToInt(allScores.twos) +
-    parseScoreToInt(allScores.threes) +
-    parseScoreToInt(allScores.fours) +
-    parseScoreToInt(allScores.fives) +
-    parseScoreToInt(allScores.sixes);
+    parseScoreToInt(scores.aces) +
+    parseScoreToInt(scores.twos) +
+    parseScoreToInt(scores.threes) +
+    parseScoreToInt(scores.fours) +
+    parseScoreToInt(scores.fives) +
+    parseScoreToInt(scores.sixes);
   const bonus = upperSectionSum >= MIN_SCORE_FOR_BONUS_YAHTZEE ? 35 : 0;
   const bonusDisplay =
     upperSectionSum > MIN_SCORE_FOR_BONUS_YAHTZEE
       ? bonus.toString()
       : `(${upperSectionSum - MIN_SCORE_FOR_BONUS_YAHTZEE})`;
   const lowerSectionSum =
-    parseScoreToInt(allScores.threeDice) +
-    parseScoreToInt(allScores.fourDice) +
-    parseScoreToInt(allScores.fullHouse) +
-    parseScoreToInt(allScores.sStraight) +
-    parseScoreToInt(allScores.lStraight) +
-    parseScoreToInt(allScores.yahtzee);
+    parseScoreToInt(scores.threeDice) +
+    parseScoreToInt(scores.fourDice) +
+    parseScoreToInt(scores.fullHouse) +
+    parseScoreToInt(scores.sStraight) +
+    parseScoreToInt(scores.lStraight) +
+    parseScoreToInt(scores.yahtzee);
   const total = upperSectionSum + bonus + lowerSectionSum;
-
-  function setValue(category: YahtzeeCategories, newValue: string) {
-    setAllScores((prev) => ({ ...prev, [category]: newValue }));
-  }
 
   return (
     <Flex direction="column" gap="3">
@@ -63,11 +50,9 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                category="aces"
+                value={scores.aces}
+                setValue={setScores("aces")}
                 selects={SCORE_SELECTS_YAHTZEE.aces}
-                value={allScores.aces}
-                setValue={setValue}
               />
             </Table.Cell>
           </Table.Row>
@@ -79,11 +64,9 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                category="twos"
+                value={scores.twos}
+                setValue={setScores("twos")}
                 selects={SCORE_SELECTS_YAHTZEE.twos}
-                value={allScores.twos}
-                setValue={setValue}
               />
             </Table.Cell>
           </Table.Row>
@@ -95,10 +78,8 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.threes}
-                setValue={setValue}
-                category="threes"
+                value={scores.threes}
+                setValue={setScores("threes")}
                 selects={SCORE_SELECTS_YAHTZEE.threes}
               />
             </Table.Cell>
@@ -111,10 +92,8 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.fours}
-                setValue={setValue}
-                category="fours"
+                value={scores.fours}
+                setValue={setScores("fours")}
                 selects={SCORE_SELECTS_YAHTZEE.fours}
               />
             </Table.Cell>
@@ -127,10 +106,8 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.fives}
-                setValue={setValue}
-                category="fives"
+                value={scores.fives}
+                setValue={setScores("fives")}
                 selects={SCORE_SELECTS_YAHTZEE.fives}
               />
             </Table.Cell>
@@ -143,10 +120,8 @@ export default function ScoresheetYahtzee() {
             />
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.sixes}
-                setValue={setValue}
-                category="sixes"
+                value={scores.sixes}
+                setValue={setScores("sixes")}
                 selects={SCORE_SELECTS_YAHTZEE.sixes}
               />
             </Table.Cell>
@@ -175,10 +150,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>スリーダイス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.threeDice}
-                setValue={setValue}
-                category="threeDice"
+                value={scores.threeDice}
+                setValue={setScores("threeDice")}
                 selects={SCORE_SELECTS_YAHTZEE.threeDice}
               />
             </Table.Cell>
@@ -187,10 +160,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>フォーダイス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.fourDice}
-                setValue={setValue}
-                category="fourDice"
+                value={scores.fourDice}
+                setValue={setScores("fourDice")}
                 selects={SCORE_SELECTS_YAHTZEE.fourDice}
               />
             </Table.Cell>
@@ -199,10 +170,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>フルハウス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.fullHouse}
-                setValue={setValue}
-                category="fullHouse"
+                value={scores.fullHouse}
+                setValue={setScores("fullHouse")}
                 selects={SCORE_SELECTS_YAHTZEE.fullHouse}
               />
             </Table.Cell>
@@ -211,10 +180,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>S.ストレート</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.sStraight}
-                setValue={setValue}
-                category="sStraight"
+                value={scores.sStraight}
+                setValue={setScores("sStraight")}
                 selects={SCORE_SELECTS_YAHTZEE.sStraight}
               />
             </Table.Cell>
@@ -223,10 +190,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>B.ストレート</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.lStraight}
-                setValue={setValue}
-                category="lStraight"
+                value={scores.lStraight}
+                setValue={setScores("lStraight")}
                 selects={SCORE_SELECTS_YAHTZEE.lStraight}
               />
             </Table.Cell>
@@ -235,10 +200,8 @@ export default function ScoresheetYahtzee() {
             <Table.Cell>ヤッツィー</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                rule={rule}
-                value={allScores.yahtzee}
-                setValue={setValue}
-                category="yahtzee"
+                value={scores.yahtzee}
+                setValue={setScores("yahtzee")}
                 selects={SCORE_SELECTS_YAHTZEE.yahtzee}
               />
             </Table.Cell>

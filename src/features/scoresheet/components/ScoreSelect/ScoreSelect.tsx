@@ -1,25 +1,13 @@
 import { Select } from "@radix-ui/themes";
 import styles from "./ScoreSelect.module.css";
 
-type ScoreSelectProps =
-  | {
-      rule: "yahtzee";
-      category: YahtzeeCategories;
-      selects: string[];
-      value: string;
-      setValue: (category: YahtzeeCategories, newValue: string) => void;
-    }
-  | {
-      rule: "yams";
-      category: YamsCategories;
-      selects: string[];
-      value: string;
-      setValue: (category: YamsCategories, newValue: string) => void;
-    };
+type ScoreSelectProps = {
+  selects: string[];
+  value: string;
+  setValue: (newValue: string) => void;
+};
 
 export default function ScoreSelect({
-  rule,
-  category,
   selects,
   value,
   setValue,
@@ -30,9 +18,7 @@ export default function ScoreSelect({
       defaultValue="none"
       value={value}
       onValueChange={(newValue) => {
-        rule === "yahtzee"
-          ? setValue(category, newValue)
-          : setValue(category, newValue);
+        setValue(newValue);
       }}
     >
       <Select.Trigger
@@ -42,11 +28,11 @@ export default function ScoreSelect({
         className={styles.scoreSelectTrigger}
       />
       <Select.Content color="jade">
-        <Select.Item key={`${category}-none`} value="none">
+        <Select.Item key={`none`} value="none">
           -
         </Select.Item>
         {selects.map((select) => (
-          <Select.Item key={`${category}-${select}`} value={select}>
+          <Select.Item key={`${select}`} value={select}>
             {select}
           </Select.Item>
         ))}

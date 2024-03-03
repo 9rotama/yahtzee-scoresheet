@@ -5,8 +5,3 @@
 .bottom {
   margin-bottom: 100px;
 }
-
-.absoluteCenter {
-  position: absolute;
-  transform: translateY(-50%) translateX(-50%);
-}
