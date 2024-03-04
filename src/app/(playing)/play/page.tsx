@@ -5,7 +5,7 @@ import ScoresheetYahtzee from "@/features/scoresheet/components/ScoresheetYahtze
 import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
 import { db } from "@/libs/db";
 import { Container } from "@radix-ui/themes";
-import { motion } from "framer-motion";
+import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 
@@ -19,6 +19,21 @@ export default function PlayPage() {
   const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
   const [displayingPlayerIdx, setDisplayingPlayerIdx] = useState<number>(0);
   const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
+  const scoresheetOpacity = useMotionValue(1);
+  const scoresheetX = useMotionValue(0);
+
+  useEffect(() => {
+    scoresheetOpacity.set(0.5);
+    scoresheetX.set(20);
+
+    const opacityAnimation = animate(scoresheetOpacity, 1, { duration: 0.3 });
+    const xAnimation = animate(scoresheetX, 0, { duration: 0.3 });
+
+    opacityAnimation.play();
+    xAnimation.play();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayingPlayerIdx]);
 
   function setScoresYahtzee(category: YahtzeeCategories) {
     return (newValue: string) => {
@@ -101,20 +116,21 @@ export default function PlayPage() {
             setDisplayingPlayerIdx={setDisplayingPlayerIdx}
           />
         ) : null}
-
-        {allPlayerScores.length !== 0 && rule ? (
-          rule === "yahtzee" ? (
-            <ScoresheetYahtzee
-              scores={allPlayerScores[displayingPlayerIdx].yahtzee}
-              setScores={setScoresYahtzee}
-            />
-          ) : (
-            <ScoresheetYams
-              scores={allPlayerScores[displayingPlayerIdx].yams}
-              setScores={setScoresYams}
-            />
-          )
-        ) : null}
+        <motion.div style={{ opacity: scoresheetOpacity, x: scoresheetX }}>
+          {allPlayerScores.length !== 0 && rule ? (
+            rule === "yahtzee" ? (
+              <ScoresheetYahtzee
+                scores={allPlayerScores[displayingPlayerIdx].yahtzee}
+                setScores={setScoresYahtzee}
+              />
+            ) : (
+              <ScoresheetYams
+                scores={allPlayerScores[displayingPlayerIdx].yams}
+                setScores={setScoresYams}
+              />
+            )
+          ) : null}
+        </motion.div>
       </Container>
     </motion.div>
   );
