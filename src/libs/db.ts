@@ -7,16 +7,29 @@ type PlayerSettingTable = {
 type RuleTable = {
   rule: string;
 };
+type CurrScoresYahtzeeTable = {
+  id?: number;
+} & ScoreSelectValuesYahtzee;
+
+type CurrScoresYamsTable = {
+  id?: number;
+} & ScoreSelectValuesYams;
 
 export class GameState extends Dexie {
   playerList!: Table<PlayerSettingTable>;
   rule!: Table<RuleTable>;
+  currScoresYahtzee!: Table<CurrScoresYahtzeeTable>;
+  currScoresYams!: Table<CurrScoresYamsTable>;
 
   constructor() {
     super("gameState");
     this.version(1).stores({
       playerList: "++id, name, colorHue",
       rule: "rule",
+      currScoresYahtzee:
+        "++id, aces, twos, threes, fours, fives, sixes, threeDice, fourDice, fullHouse, sStraight, lStraight, chance, yahtzee",
+      currScoresYams:
+        "++id, aces, twos, threes, fours, fives, sixes, plus, minus, fourDice, fullHouse, sStraight, lStraight, rigole, yahtzee",
     });
   }
 }

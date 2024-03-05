@@ -1,5 +1,6 @@
 "use client";
 
+import { SCORE_NONE_YAHTZEE, SCORE_NONE_YAMS } from "@/const/scoreValues";
 import PlayerSwitch from "@/features/scoresheet/components/PlayerSwitch";
 import ScoresheetYahtzee from "@/features/scoresheet/components/ScoresheetYahtzee";
 import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
@@ -35,6 +36,36 @@ export default function PlayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayingPlayerIdx]);
 
+  async function saveCurrScoresYahtzee(
+    category: YahtzeeCategories,
+    newValue: string,
+  ) {
+    try {
+      await db.currScoresYahtzee.update(displayingPlayerIdx + 1, {
+        [category]: newValue,
+      });
+    } catch (error) {
+      throw new Error(
+        `failed to add ${playerList[displayingPlayerIdx].name}: ${error}`,
+      );
+    }
+  }
+
+  async function saveCurrScoresYams(
+    category: YamsCategories,
+    newValue: string,
+  ) {
+    try {
+      await db.currScoresYams.update(displayingPlayerIdx + 1, {
+        [category]: newValue,
+      });
+    } catch (error) {
+      throw new Error(
+        `failed to add ${playerList[displayingPlayerIdx].name}: ${error}`,
+      );
+    }
+  }
+
   function setScoresYahtzee(category: YahtzeeCategories) {
     return (newValue: string) => {
       setAllPlayerScores((prev) => {
@@ -43,6 +74,7 @@ export default function PlayPage() {
         newAllPlayerScores[displayingPlayerIdx].yahtzee[category] = newValue;
         return newAllPlayerScores;
       });
+      saveCurrScoresYahtzee(category, newValue);
     };
   }
 
@@ -54,51 +86,83 @@ export default function PlayPage() {
         newAllPlayerScores[displayingPlayerIdx].yams[category] = newValue;
         return newAllPlayerScores;
       });
+      saveCurrScoresYams(category, newValue);
     };
   }
 
   useEffect(() => {
-    db.rule.toArray().then((data) => {
-      setRule(data[0].rule);
-    });
-    db.playerList.toArray().then((data) => {
-      setPlayerList(data);
-      setAllPlayerScores(
-        [...new Array(data.length)].map(() => ({
-          yahtzee: {
-            aces: "none",
-            twos: "none",
-            threes: "none",
-            fours: "none",
-            fives: "none",
-            sixes: "none",
-            threeDice: "none",
-            fourDice: "none",
-            fullHouse: "none",
-            sStraight: "none",
-            lStraight: "none",
-            chance: "none",
-            yahtzee: "none",
-          },
-          yams: {
-            aces: "none",
-            twos: "none",
-            threes: "none",
-            fours: "none",
-            fives: "none",
-            sixes: "none",
-            plus: "none",
-            minus: "none",
-            fourDice: "none",
-            fullHouse: "none",
-            sStraight: "none",
-            lStraight: "none",
-            rigole: "none",
-            yahtzee: "none",
-          },
-        })),
-      );
-    });
+    let rule: string;
+    let playerList: PlayerSetting[];
+    let currScoresYahtzee: ScoreSelectValuesYahtzee[];
+    let currScoresYams: ScoreSelectValuesYams[];
+
+    const addNoneScoresYahtzee = async (playerNum: number) => {
+      const add = async () => {
+        try {
+          const id = await db.currScoresYahtzee.add({ ...SCORE_NONE_YAHTZEE });
+        } catch (error) {
+          throw new Error(`failed to add none scores: ${error}`);
+        }
+      };
+
+      await db.currScoresYahtzee.clear();
+      await Promise.all([...new Array(playerNum)].map(async () => add()));
+    };
+
+    const addNoneScoresYams = async (playerNum: number) => {
+      const add = async () => {
+        try {
+          const id = await db.currScoresYams.add({ ...SCORE_NONE_YAMS });
+        } catch (error) {
+          throw new Error(`failed to add none scores: ${error}`);
+        }
+      };
+
+      await db.currScoresYams.clear();
+      await Promise.all([...new Array(playerNum)].map(async () => add()));
+    };
+
+    db.rule
+      .toArray()
+      .then((ruleData) => {
+        rule = ruleData[0].rule;
+        setRule(rule);
+        return db.playerList.toArray();
+      })
+      .then((playerListData) => {
+        playerList = playerListData;
+        setPlayerList(playerList);
+        return db.currScoresYahtzee.toArray();
+      })
+      .then((currScoresYahtzeeData) => {
+        if (currScoresYahtzeeData.length !== 0) {
+          currScoresYahtzee = currScoresYahtzeeData;
+        } else if (currScoresYahtzeeData.length === 0) {
+          currScoresYahtzee = [...new Array(playerList.length)].map(() => ({
+            ...SCORE_NONE_YAHTZEE,
+          }));
+          addNoneScoresYahtzee(playerList.length);
+        }
+        return db.currScoresYams.toArray();
+      })
+      .then((currScoresYamsData) => {
+        if (currScoresYamsData.length !== 0) {
+          currScoresYams = currScoresYamsData;
+        } else if (currScoresYamsData.length === 0) {
+          currScoresYams = [...new Array(playerList.length)].map(() => ({
+            ...SCORE_NONE_YAMS,
+          }));
+          addNoneScoresYams(playerList.length);
+        }
+      })
+      .then(() => {
+        setAllPlayerScores(
+          [...new Array(playerList.length)].map((_, i) => ({
+            yahtzee: { ...currScoresYahtzee[i] },
+            yams: { ...currScoresYams[i] },
+          })),
+        );
+      });
   }, []);
 
   return (
