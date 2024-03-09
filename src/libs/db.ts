@@ -7,6 +7,11 @@ type PlayerSettingTable = {
 type RuleTable = {
   rule: string;
 };
+
+type CurrentPageTable = {
+  currentPage: string;
+};
+
 type CurrScoresYahtzeeTable = {
   id?: number;
 } & ScoreSelectValuesYahtzee;
@@ -17,6 +22,7 @@ type CurrScoresYamsTable = {
 
 export class GameState extends Dexie {
   playerList!: Table<PlayerSettingTable>;
+  currentPage!: Table<CurrentPageTable>;
   rule!: Table<RuleTable>;
   currScoresYahtzee!: Table<CurrScoresYahtzeeTable>;
   currScoresYams!: Table<CurrScoresYamsTable>;
@@ -24,6 +30,7 @@ export class GameState extends Dexie {
   constructor() {
     super("gameState");
     this.version(1).stores({
+      currentPage: "currentPage",
       playerList: "++id, name, colorHue",
       rule: "rule",
       currScoresYahtzee:

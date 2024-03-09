@@ -1,5 +1,6 @@
 "use client";
 
+import PlayingHeader from "@/components/PlayingHeader";
 import { SCORE_NONE_YAHTZEE, SCORE_NONE_YAMS } from "@/const/scoreValues";
 import PlayerSwitch from "@/features/scoresheet/components/PlayerSwitch";
 import ScoresheetYahtzee from "@/features/scoresheet/components/ScoresheetYahtzee";
@@ -7,13 +8,9 @@ import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
 import { db } from "@/libs/db";
 import { Container } from "@radix-ui/themes";
 import { animate, motion, useMotionValue } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
-
-type PlayerScores = {
-  yahtzee: ScoreSelectValuesYahtzee;
-  yams: ScoreSelectValuesYams;
-};
 
 export default function PlayPage() {
   const [rule, setRule] = useState<string | null>(null);
@@ -22,6 +19,7 @@ export default function PlayPage() {
   const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
   const scoresheetOpacity = useMotionValue(1);
   const scoresheetX = useMotionValue(0);
+  const router = useRouter();
 
   useEffect(() => {
     scoresheetOpacity.set(0.5);
@@ -35,6 +33,10 @@ export default function PlayPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayingPlayerIdx]);
+
+  function handleClickFinishButton() {
+    router.push("/results");
+  }
 
   async function saveCurrScoresYahtzee(
     category: YahtzeeCategories,
@@ -166,36 +168,40 @@ export default function PlayPage() {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className={styles.bottom}
-    >
-      <Container p="2" size="2">
-        {playerList.length !== 0 ? (
-          <PlayerSwitch
-            playerList={playerList}
-            displayingPlayerIdx={displayingPlayerIdx}
-            setDisplayingPlayerIdx={setDisplayingPlayerIdx}
-          />
-        ) : null}
-        <motion.div style={{ opacity: scoresheetOpacity, x: scoresheetX }}>
-          {allPlayerScores.length !== 0 && rule ? (
-            rule === "yahtzee" ? (
-              <ScoresheetYahtzee
-                scores={allPlayerScores[displayingPlayerIdx].yahtzee}
-                setScores={setScoresYahtzee}
-              />
-            ) : (
-              <ScoresheetYams
-                scores={allPlayerScores[displayingPlayerIdx].yams}
-                setScores={setScoresYams}
-              />
-            )
+    <>
+      <PlayingHeader onClickFinishButton={handleClickFinishButton} />
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className={styles.bottom}
+      >
+        <Container p="2" size="2">
+          {playerList.length !== 0 ? (
+            <PlayerSwitch
+              playerList={playerList}
+              displayingPlayerIdx={displayingPlayerIdx}
+              setDisplayingPlayerIdx={setDisplayingPlayerIdx}
+            />
           ) : null}
-        </motion.div>
-      </Container>
-    </motion.div>
+          <motion.div style={{ opacity: scoresheetOpacity, x: scoresheetX }}>
+            {allPlayerScores.length !== 0 && rule ? (
+              rule === "yahtzee" ? (
+                <ScoresheetYahtzee
+                  scores={allPlayerScores[displayingPlayerIdx].yahtzee}
+                  setScores={setScoresYahtzee}
+                />
+              ) : (
+                <ScoresheetYams
+                  scores={allPlayerScores[displayingPlayerIdx].yams}
+                  setScores={setScoresYams}
+                />
+              )
+            ) : null}
+          </motion.div>
+        </Container>
+      </motion.div>
+    </>
   );
 }

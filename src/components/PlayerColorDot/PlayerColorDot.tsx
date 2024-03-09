@@ -7,7 +7,7 @@ type Props = {
 
 export default function PlayerColorDot({ colorHue, size }: Props) {
   return (
-    <span
+    <div
       className={styles.module}
       style={{
         backgroundColor: `hsl(${colorHue}deg 100% 50%)`,

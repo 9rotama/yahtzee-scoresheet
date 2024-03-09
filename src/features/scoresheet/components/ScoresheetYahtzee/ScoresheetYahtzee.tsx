@@ -3,7 +3,7 @@ import {
   SCORE_SELECTS_YAHTZEE,
 } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { parseScoreToInt } from "../../utils/parseScoreToInt";
+import calcScoresYahtzee from "../../utils/calcScoresYahtzee";
 import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
 import ScoreSelect from "../ScoreSelect/ScoreSelect";
@@ -17,26 +17,12 @@ export default function ScoresheetYahtzee({
   scores,
   setScores,
 }: ScoresheetYahtzeeProps) {
-  const upperSectionSum =
-    parseScoreToInt(scores.aces) +
-    parseScoreToInt(scores.twos) +
-    parseScoreToInt(scores.threes) +
-    parseScoreToInt(scores.fours) +
-    parseScoreToInt(scores.fives) +
-    parseScoreToInt(scores.sixes);
-  const bonus = upperSectionSum >= MIN_SCORE_FOR_BONUS_YAHTZEE ? 35 : 0;
+  const { upperSectionSum, bonus, total } = calcScoresYahtzee(scores);
+
   const bonusDisplay =
     upperSectionSum > MIN_SCORE_FOR_BONUS_YAHTZEE
       ? bonus.toString()
       : `(${upperSectionSum - MIN_SCORE_FOR_BONUS_YAHTZEE})`;
-  const lowerSectionSum =
-    parseScoreToInt(scores.threeDice) +
-    parseScoreToInt(scores.fourDice) +
-    parseScoreToInt(scores.fullHouse) +
-    parseScoreToInt(scores.sStraight) +
-    parseScoreToInt(scores.lStraight) +
-    parseScoreToInt(scores.yahtzee);
-  const total = upperSectionSum + bonus + lowerSectionSum;
 
   return (
     <Flex direction="column" gap="3">
