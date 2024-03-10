@@ -8,7 +8,6 @@ import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
 import { db } from "@/libs/db";
 import { Container } from "@radix-ui/themes";
 import { animate, motion, useMotionValue } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 
@@ -19,7 +18,28 @@ export default function PlayPage() {
   const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
   const scoresheetOpacity = useMotionValue(1);
   const scoresheetX = useMotionValue(0);
-  const router = useRouter();
+  const isFinishButtonEnabled: boolean =
+    rule === "yahtzee"
+      ? !allPlayerScores
+          .map((playerScore) => {
+            for (const key in playerScore.yahtzee) {
+              if (playerScore.yahtzee[key as YahtzeeCategories] === "none")
+                return false;
+            }
+            return true;
+          })
+          .includes(false)
+      : rule === "yams"
+      ? !allPlayerScores
+          .map((playerScore) => {
+            for (const key in playerScore.yams) {
+              if (playerScore.yams[key as YamsCategories] === "none")
+                return false;
+            }
+            return true;
+          })
+          .includes(false)
+      : true;
 
   useEffect(() => {
     scoresheetOpacity.set(0.5);
@@ -33,10 +53,6 @@ export default function PlayPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayingPlayerIdx]);
-
-  function handleClickFinishButton() {
-    router.push("/results");
-  }
 
   async function saveCurrScoresYahtzee(
     category: YahtzeeCategories,
@@ -169,7 +185,7 @@ export default function PlayPage() {
 
   return (
     <>
-      <PlayingHeader onClickFinishButton={handleClickFinishButton} />
+      <PlayingHeader isFinishButtonEnabled={isFinishButtonEnabled} />
 
       <motion.div
         initial={{ opacity: 0 }}
