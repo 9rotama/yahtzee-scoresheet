@@ -192,6 +192,16 @@ export default function ScoresheetYahtzee({
               />
             </Table.Cell>
           </Table.Row>
+          <Table.Row>
+            <Table.Cell>チャンス</Table.Cell>
+            <Table.Cell>
+              <ScoreSelect
+                value={scores.chance}
+                setValue={setScores("chance")}
+                selects={SCORE_SELECTS_YAHTZEE.chance}
+              />
+            </Table.Cell>
+          </Table.Row>
         </Table.Body>
       </Table.Root>
       <Table.Root variant="surface">
