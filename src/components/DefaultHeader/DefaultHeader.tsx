@@ -1,16 +1,21 @@
 "use client";
 
-import { Button, DropdownMenu } from "@radix-ui/themes";
+import { Button, DropdownMenu, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { FiAlignJustify } from "react-icons/fi";
+import AppearanceSwitch from "../AppearanceSwitch";
 import HeaderLayout from "../HeaderLayout";
 
 function DropdownContent() {
   return (
     <DropdownMenu.Content color="jade">
-      <DropdownMenu.Item>プレー履歴</DropdownMenu.Item>
+      <DropdownMenu.Item>
+        <Text>プレー履歴</Text>
+      </DropdownMenu.Item>
       <Link href="/credits">
-        <DropdownMenu.Item>クレジット</DropdownMenu.Item>
+        <DropdownMenu.Item>
+          <Text>クレジット</Text>
+        </DropdownMenu.Item>
       </Link>
     </DropdownMenu.Content>
   );
@@ -19,15 +24,18 @@ function DropdownContent() {
 export default function DefaultHeader() {
   return (
     <HeaderLayout
+      left={<AppearanceSwitch />}
       right={
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <Button variant="ghost" color="jade">
-              <FiAlignJustify size={20} color="#000000" />
-            </Button>
-          </DropdownMenu.Trigger>
-          <DropdownContent />
-        </DropdownMenu.Root>
+        <>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <Button variant="ghost" color="gray">
+                <FiAlignJustify size={20} />
+              </Button>
+            </DropdownMenu.Trigger>
+            <DropdownContent />
+          </DropdownMenu.Root>
+        </>
       }
     />
   );

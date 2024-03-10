@@ -5,11 +5,11 @@ body {
 
 a {
   text-decoration: none;
-  color: #000;
+  color: inherit;
 }
 
 a:active {
-  color: #000;
+  color: inherit;
 }
 
 a:focus {

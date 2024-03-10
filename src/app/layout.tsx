@@ -1,4 +1,4 @@
-import { Theme } from "@radix-ui/themes";
+import AppearanceProvider from "@/components/ApperanceProvider/AppearanceProvider";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={notoSansJp.className}>
-        <Theme>{children}</Theme>
+        <AppearanceProvider>{children}</AppearanceProvider>
       </body>
     </html>
   );

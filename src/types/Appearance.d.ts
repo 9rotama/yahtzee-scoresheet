@@ -1,0 +1,1 @@
+type Appearance = "light" | "dark";
