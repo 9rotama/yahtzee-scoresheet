@@ -2,6 +2,9 @@ import { range } from "@/utils/range";
 
 export const NUM_DICE = 5;
 
+export const MIN_SCORE_FOR_BONUS_YAMS = 60;
+export const MIN_SCORE_FOR_BONUS_YAHTZEE = 63;
+
 const SCORE_SELECTS_YAHTZEE_NUMBER: { [key in YahtzeeCategories]: number[] } = {
   aces: [...Array(NUM_DICE + 1)].map((_, i) => i),
   twos: [...Array(NUM_DICE + 1)].map((_, i) => i * 2),
