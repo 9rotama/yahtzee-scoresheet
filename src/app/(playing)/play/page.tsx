@@ -193,7 +193,7 @@ export default function PlayPage() {
         transition={{ duration: 0.3 }}
         className={styles.bottom}
       >
-        <Container p="2" size="2">
+        <Container p="2" size="1">
           {playerList.length !== 0 ? (
             <PlayerSwitch
               playerList={playerList}
