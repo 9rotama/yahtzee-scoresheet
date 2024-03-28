@@ -4,7 +4,7 @@ import { useContext } from "react";
 import {
   appearanceContext,
   setAppearanceContext,
-} from "../ApperanceProvider/AppearanceProvider";
+} from "../AppearanceProvider/AppearanceProvider";
 
 export default function AppearanceSwitch() {
   const appearance = useContext(appearanceContext);

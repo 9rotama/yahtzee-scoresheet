@@ -1,4 +1,4 @@
-import AppearanceProvider from "@/components/ApperanceProvider/AppearanceProvider";
+import AppearanceProvider from "@/components/AppearanceProvider/AppearanceProvider";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
