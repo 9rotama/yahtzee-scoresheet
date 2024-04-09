@@ -1,6 +1,7 @@
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { IconButton } from "@radix-ui/themes";
 import { useContext } from "react";
+import { setLocalStorageAppearance } from "../../libs/localStorageAppearance";
 import {
   appearanceContext,
   setAppearanceContext,
@@ -18,7 +19,7 @@ export default function AppearanceSwitch() {
       onClick={() => {
         const newAppearance = appearance === "light" ? "dark" : "light";
         setAppearance(newAppearance);
-        localStorage.setItem("appearance", newAppearance);
+        setLocalStorageAppearance(newAppearance);
       }}
     >
       {appearance === "dark" ? <MoonIcon /> : <SunIcon />}

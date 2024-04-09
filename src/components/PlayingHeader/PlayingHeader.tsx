@@ -1,6 +1,6 @@
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import Link from "next/link";
-import AppearanceSwitch from "../AppearanceSwitch";
+import AppearanceSwitch from "../../features/appearance/components/AppearanceSwitch";
 import HeaderLayout from "../HeaderLayout";
 
 type PlayingHeaderProps = {

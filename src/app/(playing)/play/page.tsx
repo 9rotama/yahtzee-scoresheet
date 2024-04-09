@@ -2,9 +2,17 @@
 
 import PlayingHeader from "@/components/PlayingHeader";
 import { SCORE_NONE_YAHTZEE, SCORE_NONE_YAMS } from "@/const/scoreValues";
+import { getPlayerList } from "@/features/player/libs/indexedDbPlayer";
+import { getRule } from "@/features/ruleSelect/libs/indexedDbRule";
 import PlayerSwitch from "@/features/scoresheet/components/PlayerSwitch";
 import ScoresheetYahtzee from "@/features/scoresheet/components/ScoresheetYahtzee";
 import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
+import {
+  getCurrScoresYahtzee,
+  getCurrScoresYams,
+  saveCurrScoresYahtzee,
+  saveCurrScoresYams,
+} from "@/features/scoresheet/libs/indexedDbScoresheet";
 import { db } from "@/libs/db";
 import { Container } from "@radix-ui/themes";
 import { animate, motion, useMotionValue } from "framer-motion";
@@ -54,36 +62,6 @@ export default function PlayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayingPlayerIdx]);
 
-  async function saveCurrScoresYahtzee(
-    category: YahtzeeCategories,
-    newValue: string,
-  ) {
-    try {
-      await db.currScoresYahtzee.update(displayingPlayerIdx + 1, {
-        [category]: newValue,
-      });
-    } catch (error) {
-      throw new Error(
-        `failed to add ${playerList[displayingPlayerIdx].name}: ${error}`,
-      );
-    }
-  }
-
-  async function saveCurrScoresYams(
-    category: YamsCategories,
-    newValue: string,
-  ) {
-    try {
-      await db.currScoresYams.update(displayingPlayerIdx + 1, {
-        [category]: newValue,
-      });
-    } catch (error) {
-      throw new Error(
-        `failed to add ${playerList[displayingPlayerIdx].name}: ${error}`,
-      );
-    }
-  }
-
   function setScoresYahtzee(category: YahtzeeCategories) {
     return (newValue: string) => {
       setAllPlayerScores((prev) => {
@@ -92,7 +70,12 @@ export default function PlayPage() {
         newAllPlayerScores[displayingPlayerIdx].yahtzee[category] = newValue;
         return newAllPlayerScores;
       });
-      saveCurrScoresYahtzee(category, newValue);
+      saveCurrScoresYahtzee(
+        displayingPlayerIdx,
+        playerList[displayingPlayerIdx].name,
+        category,
+        newValue,
+      );
     };
   }
 
@@ -104,7 +87,12 @@ export default function PlayPage() {
         newAllPlayerScores[displayingPlayerIdx].yams[category] = newValue;
         return newAllPlayerScores;
       });
-      saveCurrScoresYams(category, newValue);
+      saveCurrScoresYams(
+        displayingPlayerIdx,
+        playerList[displayingPlayerIdx].name,
+        category,
+        newValue,
+      );
     };
   }
 
@@ -117,7 +105,7 @@ export default function PlayPage() {
     const addNoneScoresYahtzee = async (playerNum: number) => {
       const add = async () => {
         try {
-          const id = await db.currScoresYahtzee.add({ ...SCORE_NONE_YAHTZEE });
+          await db.currScoresYahtzee.add({ ...SCORE_NONE_YAHTZEE });
         } catch (error) {
           throw new Error(`failed to add none scores: ${error}`);
         }
@@ -130,7 +118,7 @@ export default function PlayPage() {
     const addNoneScoresYams = async (playerNum: number) => {
       const add = async () => {
         try {
-          const id = await db.currScoresYams.add({ ...SCORE_NONE_YAMS });
+          await db.currScoresYams.add({ ...SCORE_NONE_YAMS });
         } catch (error) {
           throw new Error(`failed to add none scores: ${error}`);
         }
@@ -140,17 +128,16 @@ export default function PlayPage() {
       await Promise.all([...new Array(playerNum)].map(async () => add()));
     };
 
-    db.rule
-      .toArray()
+    getRule()
       .then((ruleData) => {
         rule = ruleData[0].rule;
         setRule(rule);
-        return db.playerList.toArray();
+        return getPlayerList();
       })
       .then((playerListData) => {
         playerList = playerListData;
         setPlayerList(playerList);
-        return db.currScoresYahtzee.toArray();
+        return getCurrScoresYahtzee();
       })
       .then((currScoresYahtzeeData) => {
         if (currScoresYahtzeeData.length !== 0) {
@@ -161,7 +148,7 @@ export default function PlayPage() {
           }));
           addNoneScoresYahtzee(playerList.length);
         }
-        return db.currScoresYams.toArray();
+        return getCurrScoresYams();
       })
       .then((currScoresYamsData) => {
         if (currScoresYamsData.length !== 0) {

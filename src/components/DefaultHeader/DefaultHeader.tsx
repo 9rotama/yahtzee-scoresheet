@@ -3,7 +3,7 @@
 import { Button, DropdownMenu, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { FiAlignJustify } from "react-icons/fi";
-import AppearanceSwitch from "../AppearanceSwitch";
+import AppearanceSwitch from "../../features/appearance/components/AppearanceSwitch";
 import HeaderLayout from "../HeaderLayout";
 
 function DropdownContent() {

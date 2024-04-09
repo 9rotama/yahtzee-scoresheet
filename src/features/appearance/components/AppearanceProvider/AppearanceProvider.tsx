@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { getLocalStorageAppearance } from "../../libs/localStorageAppearance";
 
 type Props = {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export default function AppearanceProvider({ children }: Props) {
   const [appearance, setAppearance] = useState<Appearance>("light");
 
   useEffect(() => {
-    const appearanceStored = localStorage.getItem("appearance");
+    const appearanceStored = getLocalStorageAppearance();
     if (appearanceStored !== null)
       setAppearance(appearanceStored as Appearance);
   }, []);
