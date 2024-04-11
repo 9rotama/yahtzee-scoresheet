@@ -7,7 +7,7 @@ import "./globals.css";
 const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Yahtzee Scoresheet",
+  title: "Yahtzee ScoreSheet",
   description: "ヤッツィー記録表アプリ",
 };
 

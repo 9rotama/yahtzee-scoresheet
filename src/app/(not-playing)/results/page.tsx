@@ -2,8 +2,8 @@
 
 import MovePageButton from "@/components/MovePageButton";
 import PlayerColorDot from "@/components/PlayerColorDot";
-import calcScoresYahtzee from "@/features/scoresheet/utils/calcScoresYahtzee";
-import calcScoresYams from "@/features/scoresheet/utils/calcScoresYams";
+import calcScoresYahtzee from "@/features/scoreSheet/utils/calcScoresYahtzee";
+import calcScoresYams from "@/features/scoreSheet/utils/calcScoresYams";
 import { db } from "@/libs/db";
 import { Container, Flex, Heading, Table, Text } from "@radix-ui/themes";
 import { motion } from "framer-motion";

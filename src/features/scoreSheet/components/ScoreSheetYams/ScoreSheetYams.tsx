@@ -1,28 +1,28 @@
 import {
-  MIN_SCORE_FOR_BONUS_YAHTZEE,
-  SCORE_SELECTS_YAHTZEE,
+  MIN_SCORE_FOR_BONUS_YAMS,
+  SCORE_SELECTS_YAMS,
 } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import calcScoresYahtzee from "../../utils/calcScoresYahtzee";
+import calcScoresYams from "../../utils/calcScoresYams";
 import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
-import ScoreSelect from "../ScoreSelect/ScoreSelect";
+import ScoreSelect from "../ScoreSelect";
 
-type ScoresheetYahtzeeProps = {
-  scores: ScoreSelectValuesYahtzee;
-  setScores: (category: YahtzeeCategories) => (newValue: string) => void;
+type ScoreSheetYamsProps = {
+  scores: ScoreSelectValuesYams;
+  setScores: (category: YamsCategories) => (newValue: string) => void;
 };
 
-export default function ScoresheetYahtzee({
+export default function ScoreSheetYams({
   scores,
   setScores,
-}: ScoresheetYahtzeeProps) {
-  const { upperSectionSum, bonus, total } = calcScoresYahtzee(scores);
+}: ScoreSheetYamsProps) {
+  const { upperSectionSum, bonus, delta, total } = calcScoresYams(scores);
 
   const bonusDisplay =
-    upperSectionSum > MIN_SCORE_FOR_BONUS_YAHTZEE
+    upperSectionSum > MIN_SCORE_FOR_BONUS_YAMS
       ? bonus.toString()
-      : `(${upperSectionSum - MIN_SCORE_FOR_BONUS_YAHTZEE})`;
+      : `(${upperSectionSum - MIN_SCORE_FOR_BONUS_YAMS})`;
 
   return (
     <Flex direction="column" gap="3">
@@ -36,9 +36,9 @@ export default function ScoresheetYahtzee({
             />
             <Table.Cell>
               <ScoreSelect
+                selects={SCORE_SELECTS_YAMS.aces}
                 value={scores.aces}
                 setValue={setScores("aces")}
-                selects={SCORE_SELECTS_YAHTZEE.aces}
               />
             </Table.Cell>
           </Table.Row>
@@ -50,9 +50,9 @@ export default function ScoresheetYahtzee({
             />
             <Table.Cell>
               <ScoreSelect
+                selects={SCORE_SELECTS_YAMS.twos}
                 value={scores.twos}
                 setValue={setScores("twos")}
-                selects={SCORE_SELECTS_YAHTZEE.twos}
               />
             </Table.Cell>
           </Table.Row>
@@ -66,7 +66,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.threes}
                 setValue={setScores("threes")}
-                selects={SCORE_SELECTS_YAHTZEE.threes}
+                selects={SCORE_SELECTS_YAMS.threes}
               />
             </Table.Cell>
           </Table.Row>
@@ -80,7 +80,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.fours}
                 setValue={setScores("fours")}
-                selects={SCORE_SELECTS_YAHTZEE.fours}
+                selects={SCORE_SELECTS_YAMS.fours}
               />
             </Table.Cell>
           </Table.Row>
@@ -94,7 +94,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.fives}
                 setValue={setScores("fives")}
-                selects={SCORE_SELECTS_YAHTZEE.fives}
+                selects={SCORE_SELECTS_YAMS.fives}
               />
             </Table.Cell>
           </Table.Row>
@@ -108,7 +108,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.sixes}
                 setValue={setScores("sixes")}
-                selects={SCORE_SELECTS_YAHTZEE.sixes}
+                selects={SCORE_SELECTS_YAMS.sixes}
               />
             </Table.Cell>
           </Table.Row>
@@ -133,22 +133,42 @@ export default function ScoresheetYahtzee({
       <Table.Root variant="surface">
         <Table.Body>
           <Table.Row>
-            <Table.Cell>スリーダイス</Table.Cell>
+            <Table.Cell>プラス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                value={scores.threeDice}
-                setValue={setScores("threeDice")}
-                selects={SCORE_SELECTS_YAHTZEE.threeDice}
+                value={scores.plus}
+                setValue={setScores("plus")}
+                selects={SCORE_SELECTS_YAMS.plus}
               />
             </Table.Cell>
           </Table.Row>
+          <Table.Row>
+            <Table.Cell>マイナス</Table.Cell>
+            <Table.Cell>
+              <ScoreSelect
+                value={scores.minus}
+                setValue={setScores("minus")}
+                selects={SCORE_SELECTS_YAMS.minus}
+              />
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>デルタ</Table.Cell>
+            <Table.Cell align="right">
+              <CellValueAutoUpdated slot={<Text weight="bold">{delta}</Text>} />
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table.Root>
+      <Table.Root variant="surface">
+        <Table.Body>
           <Table.Row>
             <Table.Cell>フォーダイス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
                 value={scores.fourDice}
                 setValue={setScores("fourDice")}
-                selects={SCORE_SELECTS_YAHTZEE.fourDice}
+                selects={SCORE_SELECTS_YAMS.fourDice}
               />
             </Table.Cell>
           </Table.Row>
@@ -158,7 +178,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.fullHouse}
                 setValue={setScores("fullHouse")}
-                selects={SCORE_SELECTS_YAHTZEE.fullHouse}
+                selects={SCORE_SELECTS_YAMS.fullHouse}
               />
             </Table.Cell>
           </Table.Row>
@@ -168,7 +188,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.sStraight}
                 setValue={setScores("sStraight")}
-                selects={SCORE_SELECTS_YAHTZEE.sStraight}
+                selects={SCORE_SELECTS_YAMS.sStraight}
               />
             </Table.Cell>
           </Table.Row>
@@ -178,7 +198,7 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.lStraight}
                 setValue={setScores("lStraight")}
-                selects={SCORE_SELECTS_YAHTZEE.lStraight}
+                selects={SCORE_SELECTS_YAMS.lStraight}
               />
             </Table.Cell>
           </Table.Row>
@@ -188,17 +208,17 @@ export default function ScoresheetYahtzee({
               <ScoreSelect
                 value={scores.yahtzee}
                 setValue={setScores("yahtzee")}
-                selects={SCORE_SELECTS_YAHTZEE.yahtzee}
+                selects={SCORE_SELECTS_YAMS.yahtzee}
               />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell>チャンス</Table.Cell>
+            <Table.Cell>リゴール</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                value={scores.chance}
-                setValue={setScores("chance")}
-                selects={SCORE_SELECTS_YAHTZEE.chance}
+                value={scores.rigole}
+                setValue={setScores("rigole")}
+                selects={SCORE_SELECTS_YAMS.yahtzee}
               />
             </Table.Cell>
           </Table.Row>
@@ -206,7 +226,7 @@ export default function ScoresheetYahtzee({
       </Table.Root>
       <Table.Root variant="surface">
         <Table.Body>
-          <Table.Row>
+          <Table.Row color="jade">
             <Table.Cell>総合得点</Table.Cell>
             <Table.Cell align="right">
               <CellValueAutoUpdated

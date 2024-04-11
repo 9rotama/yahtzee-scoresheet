@@ -4,15 +4,15 @@ import PlayingHeader from "@/components/PlayingHeader";
 import { SCORE_NONE_YAHTZEE, SCORE_NONE_YAMS } from "@/const/scoreValues";
 import { getPlayerList } from "@/features/player/libs/indexedDbPlayer";
 import { getRule } from "@/features/ruleSelect/libs/indexedDbRule";
-import PlayerSwitch from "@/features/scoresheet/components/PlayerSwitch";
-import ScoresheetYahtzee from "@/features/scoresheet/components/ScoresheetYahtzee";
-import ScoresheetYams from "@/features/scoresheet/components/ScoresheetYams";
+import PlayerSwitch from "@/features/scoreSheet/components/PlayerSwitch";
+import ScoreSheetYahtzee from "@/features/scoreSheet/components/ScoreSheetYahtzee";
+import ScoreSheetYams from "@/features/scoreSheet/components/ScoreSheetYams";
 import {
   getCurrScoresYahtzee,
   getCurrScoresYams,
   saveCurrScoresYahtzee,
   saveCurrScoresYams,
-} from "@/features/scoresheet/libs/indexedDbScoresheet";
+} from "@/features/scoreSheet/libs/indexedDbScoreSheet";
 import { db } from "@/libs/db";
 import { Container } from "@radix-ui/themes";
 import { animate, motion, useMotionValue } from "framer-motion";
@@ -24,8 +24,8 @@ export default function PlayPage() {
   const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
   const [displayingPlayerIdx, setDisplayingPlayerIdx] = useState<number>(0);
   const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
-  const scoresheetOpacity = useMotionValue(1);
-  const scoresheetX = useMotionValue(0);
+  const scoreSheetOpacity = useMotionValue(1);
+  const scoreSheetX = useMotionValue(0);
   const isFinishButtonEnabled: boolean =
     rule === "yahtzee"
       ? !allPlayerScores
@@ -50,14 +50,18 @@ export default function PlayPage() {
       : true;
 
   useEffect(() => {
-    scoresheetOpacity.set(0.5);
-    scoresheetX.set(20);
+    function animateEntireSheet() {
+      scoreSheetOpacity.set(0.5);
+      scoreSheetX.set(20);
 
-    const opacityAnimation = animate(scoresheetOpacity, 1, { duration: 0.3 });
-    const xAnimation = animate(scoresheetX, 0, { duration: 0.3 });
+      const opacityAnimation = animate(scoreSheetOpacity, 1, { duration: 0.3 });
+      const xAnimation = animate(scoreSheetX, 0, { duration: 0.3 });
 
-    opacityAnimation.play();
-    xAnimation.play();
+      opacityAnimation.play();
+      xAnimation.play();
+    }
+
+    animateEntireSheet();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayingPlayerIdx]);
@@ -188,15 +192,15 @@ export default function PlayPage() {
               setDisplayingPlayerIdx={setDisplayingPlayerIdx}
             />
           ) : null}
-          <motion.div style={{ opacity: scoresheetOpacity, x: scoresheetX }}>
+          <motion.div style={{ opacity: scoreSheetOpacity, x: scoreSheetX }}>
             {allPlayerScores.length !== 0 && rule ? (
               rule === "yahtzee" ? (
-                <ScoresheetYahtzee
+                <ScoreSheetYahtzee
                   scores={allPlayerScores[displayingPlayerIdx].yahtzee}
                   setScores={setScoresYahtzee}
                 />
               ) : (
-                <ScoresheetYams
+                <ScoreSheetYams
                   scores={allPlayerScores[displayingPlayerIdx].yams}
                   setScores={setScoresYams}
                 />
