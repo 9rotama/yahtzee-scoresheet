@@ -1,13 +1,33 @@
-import { SCORE_SELECTS_YAMS } from "@/const/scoreSelects";
+import {
+  MIN_SCORE_FOR_BONUS_YAMS,
+  SCORE_SELECTS_YAMS,
+} from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { useState } from "react";
+import { useMemo } from "react";
+import calcScoresYams from "../../utils/calcScoresYams";
+import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
 import ScoreSelect from "../ScoreSelect";
 
-type ScoreSelectValuesYams = { [key in YamsCategories]: string };
+type ScoreSheetYamsProps = {
+  scores: ScoreSelectValuesYams;
+  setScores: (category: YamsCategories) => (newValue: string) => void;
+};
 
-export default function ScoresheetYams() {
-  const [selectValues, setSelectValues] = useState<ScoreSelectValuesYams>();
+export default function ScoreSheetYams({
+  scores,
+  setScores,
+}: ScoreSheetYamsProps) {
+  const { upperSectionSum, bonus, delta, total } = useMemo(
+    () => calcScoresYams(scores),
+    [scores],
+  );
+
+  const bonusDisplay =
+    upperSectionSum > MIN_SCORE_FOR_BONUS_YAMS
+      ? bonus.toString()
+      : `(${upperSectionSum - MIN_SCORE_FOR_BONUS_YAMS})`;
+
   return (
     <Flex direction="column" gap="3">
       <Table.Root variant="surface">
@@ -19,7 +39,11 @@ export default function ScoresheetYams() {
               slot={<Text>エース</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="aces" selects={SCORE_SELECTS_YAMS.aces} />
+              <ScoreSelect
+                selects={SCORE_SELECTS_YAMS.aces}
+                value={scores.aces}
+                setValue={setScores("aces")}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -29,7 +53,11 @@ export default function ScoresheetYams() {
               slot={<Text>デュース</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="twos" selects={SCORE_SELECTS_YAMS.twos} />
+              <ScoreSelect
+                selects={SCORE_SELECTS_YAMS.twos}
+                value={scores.twos}
+                setValue={setScores("twos")}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -39,7 +67,11 @@ export default function ScoresheetYams() {
               slot={<Text>トレイ</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="threes" selects={SCORE_SELECTS_YAMS.threes} />
+              <ScoreSelect
+                value={scores.threes}
+                setValue={setScores("threes")}
+                selects={SCORE_SELECTS_YAMS.threes}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -49,7 +81,11 @@ export default function ScoresheetYams() {
               slot={<Text>フォー</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="fours" selects={SCORE_SELECTS_YAMS.fours} />
+              <ScoreSelect
+                value={scores.fours}
+                setValue={setScores("fours")}
+                selects={SCORE_SELECTS_YAMS.fours}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -59,7 +95,11 @@ export default function ScoresheetYams() {
               slot={<Text>ファイブ</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="fives" selects={SCORE_SELECTS_YAMS.fives} />
+              <ScoreSelect
+                value={scores.fives}
+                setValue={setScores("fives")}
+                selects={SCORE_SELECTS_YAMS.fives}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -69,16 +109,28 @@ export default function ScoresheetYams() {
               slot={<Text>シックス</Text>}
             />
             <Table.Cell>
-              <ScoreSelect name="sixes" selects={SCORE_SELECTS_YAMS.sixes} />
+              <ScoreSelect
+                value={scores.sixes}
+                setValue={setScores("sixes")}
+                selects={SCORE_SELECTS_YAMS.sixes}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>合計</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <CellValueAutoUpdated
+                slot={<Text weight="bold">{upperSectionSum}</Text>}
+              />
+            </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>ボーナス</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <CellValueAutoUpdated
+                slot={<Text weight={"bold"}>{bonusDisplay}</Text>}
+              />
+            </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table.Root>
@@ -87,18 +139,28 @@ export default function ScoresheetYams() {
           <Table.Row>
             <Table.Cell>プラス</Table.Cell>
             <Table.Cell>
-              <ScoreSelect name="fourDice" selects={SCORE_SELECTS_YAMS.plus} />
+              <ScoreSelect
+                value={scores.plus}
+                setValue={setScores("plus")}
+                selects={SCORE_SELECTS_YAMS.plus}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>マイナス</Table.Cell>
             <Table.Cell>
-              <ScoreSelect name="fourDice" selects={SCORE_SELECTS_YAMS.minus} />
+              <ScoreSelect
+                value={scores.minus}
+                setValue={setScores("minus")}
+                selects={SCORE_SELECTS_YAMS.minus}
+              />
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>デルタ</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <CellValueAutoUpdated slot={<Text weight="bold">{delta}</Text>} />
+            </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table.Root>
@@ -108,7 +170,8 @@ export default function ScoresheetYams() {
             <Table.Cell>フォーダイス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="fourDice"
+                value={scores.fourDice}
+                setValue={setScores("fourDice")}
                 selects={SCORE_SELECTS_YAMS.fourDice}
               />
             </Table.Cell>
@@ -117,7 +180,8 @@ export default function ScoresheetYams() {
             <Table.Cell>フルハウス</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="fullHouse"
+                value={scores.fullHouse}
+                setValue={setScores("fullHouse")}
                 selects={SCORE_SELECTS_YAMS.fullHouse}
               />
             </Table.Cell>
@@ -126,7 +190,8 @@ export default function ScoresheetYams() {
             <Table.Cell>S.ストレート</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="sStraight"
+                value={scores.sStraight}
+                setValue={setScores("sStraight")}
                 selects={SCORE_SELECTS_YAMS.sStraight}
               />
             </Table.Cell>
@@ -135,7 +200,8 @@ export default function ScoresheetYams() {
             <Table.Cell>B.ストレート</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="lStraight"
+                value={scores.lStraight}
+                setValue={setScores("lStraight")}
                 selects={SCORE_SELECTS_YAMS.lStraight}
               />
             </Table.Cell>
@@ -144,7 +210,8 @@ export default function ScoresheetYams() {
             <Table.Cell>ヤッツィー</Table.Cell>
             <Table.Cell>
               <ScoreSelect
-                name="yahtzee"
+                value={scores.yahtzee}
+                setValue={setScores("yahtzee")}
                 selects={SCORE_SELECTS_YAMS.yahtzee}
               />
             </Table.Cell>
@@ -152,16 +219,24 @@ export default function ScoresheetYams() {
           <Table.Row>
             <Table.Cell>リゴール</Table.Cell>
             <Table.Cell>
-              <ScoreSelect name="rigole" selects={SCORE_SELECTS_YAMS.rigole} />
+              <ScoreSelect
+                value={scores.rigole}
+                setValue={setScores("rigole")}
+                selects={SCORE_SELECTS_YAMS.yahtzee}
+              />
             </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table.Root>
       <Table.Root variant="surface">
         <Table.Body>
-          <Table.Row>
+          <Table.Row color="jade">
             <Table.Cell>総合得点</Table.Cell>
-            <Table.Cell></Table.Cell>
+            <Table.Cell align="right">
+              <CellValueAutoUpdated
+                slot={<Text weight={"bold"}>{total}</Text>}
+              />
+            </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table.Root>

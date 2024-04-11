@@ -1,0 +1,32 @@
+export const SCORE_NONE_YAHTZEE: ScoreSelectValuesYahtzee = {
+  aces: "none",
+  twos: "none",
+  threes: "none",
+  fours: "none",
+  fives: "none",
+  sixes: "none",
+  threeDice: "none",
+  fourDice: "none",
+  fullHouse: "none",
+  sStraight: "none",
+  lStraight: "none",
+  chance: "none",
+  yahtzee: "none",
+};
+
+export const SCORE_NONE_YAMS: ScoreSelectValuesYams = {
+  aces: "none",
+  twos: "none",
+  threes: "none",
+  fours: "none",
+  fives: "none",
+  sixes: "none",
+  plus: "none",
+  minus: "none",
+  fourDice: "none",
+  fullHouse: "none",
+  sStraight: "none",
+  lStraight: "none",
+  rigole: "none",
+  yahtzee: "none",
+};

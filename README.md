@@ -1,4 +1,4 @@
-# yahtzee-scoresheet
+# yahtzee-scoreSheet
 
 ヤッツィー(ヨット)の記録表アプリ
 

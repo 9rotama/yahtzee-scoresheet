@@ -10,7 +10,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function PlayerPage() {
-  const { playerList, addPlayer, removePlayer, editPlayer, savePlayerList } =
+  const { playerList, addPlayer, removePlayer, editPlayer, savePlayer } =
     usePlayerList();
   return (
     <motion.div
@@ -47,7 +47,7 @@ export default function PlayerPage() {
           <Link
             href="/rule"
             onClick={() => {
-              savePlayerList();
+              savePlayer();
             }}
           >
             <MovePageButton direction="next">
