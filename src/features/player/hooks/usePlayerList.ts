@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPlayerList } from "../libs/indexedDbPlayer";
+import { getPlayerList, savePlayerList } from "../libs/indexedDbPlayer";
 
 export default function usePlayerList() {
   const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
@@ -32,9 +32,9 @@ export default function usePlayerList() {
     getPlayerList().then((data) => setPlayerList(data));
   }, []);
 
-  const savePlayerList = async (value: PlayerSetting) => {
-    await savePlayerList(value);
+  const savePlayer = async () => {
+    await savePlayerList(playerList);
   };
 
-  return { playerList, addPlayer, removePlayer, editPlayer, savePlayerList };
+  return { playerList, addPlayer, removePlayer, editPlayer, savePlayer };
 }

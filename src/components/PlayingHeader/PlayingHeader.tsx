@@ -1,3 +1,4 @@
+import { saveIsGameInProgress } from "@/features/scoreSheet/libs/indexedDbIsGameInProgress";
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import AppearanceSwitch from "../../features/appearance/components/AppearanceSwitch";
@@ -35,7 +36,12 @@ export default function PlayingHeader({
                       </Button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                      <Link href="results">
+                      <Link
+                        href="results"
+                        onClick={() => {
+                          saveIsGameInProgress("false");
+                        }}
+                      >
                         <Button variant="solid" color="red">
                           ゲームを終了する
                         </Button>

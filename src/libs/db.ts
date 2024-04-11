@@ -8,8 +8,8 @@ type RuleTable = {
   rule: string;
 };
 
-type CurrentPageTable = {
-  currentPage: string;
+type isGameInProgressTable = {
+  isGameInProgress: string;
 };
 
 type CurrScoresYahtzeeTable = {
@@ -22,22 +22,27 @@ type CurrScoresYamsTable = {
 
 export class GameState extends Dexie {
   playerList!: Table<PlayerSettingTable>;
-  currentPage!: Table<CurrentPageTable>;
   rule!: Table<RuleTable>;
+  isGameInProgress!: Table<isGameInProgressTable>;
   currScoresYahtzee!: Table<CurrScoresYahtzeeTable>;
   currScoresYams!: Table<CurrScoresYamsTable>;
 
   constructor() {
     super("gameState");
-    this.version(1).stores({
-      currentPage: "currentPage",
-      playerList: "++id, name, colorHue",
-      rule: "rule",
-      currScoresYahtzee:
-        "++id, aces, twos, threes, fours, fives, sixes, threeDice, fourDice, fullHouse, sStraight, lStraight, chance, yahtzee",
-      currScoresYams:
-        "++id, aces, twos, threes, fours, fives, sixes, plus, minus, fourDice, fullHouse, sStraight, lStraight, rigole, yahtzee",
-    });
+    this.version(1)
+      .stores({
+        playerList: "++id, name, colorHue",
+        rule: "rule",
+        isGameInProgress: "isGameInProgress",
+        currScoresYahtzee:
+          "++id, aces, twos, threes, fours, fives, sixes, threeDice, fourDice, fullHouse, sStraight, lStraight, chance, yahtzee",
+        currScoresYams:
+          "++id, aces, twos, threes, fours, fives, sixes, plus, minus, fourDice, fullHouse, sStraight, lStraight, rigole, yahtzee",
+      })
+      .upgrade((tx) => {
+        const defaultIsGameInProgress = [{ isGameInProgress: "false" }];
+        tx.table("isGameInProgress").add(defaultIsGameInProgress);
+      });
   }
 }
 

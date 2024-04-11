@@ -1,7 +1,9 @@
 import { db } from "@/libs/db";
 
 export async function getRule() {
-  return db.rule.toArray().then((data) => data);
+  return db.rule
+    .toArray()
+    .then((data) => (data.length === 0 ? "yahtzee" : data[0].rule));
 }
 
 export async function saveRule(value: string) {

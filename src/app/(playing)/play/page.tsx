@@ -1,7 +1,6 @@
 "use client";
 
 import PlayingHeader from "@/components/PlayingHeader";
-import { SCORE_NONE_YAHTZEE, SCORE_NONE_YAMS } from "@/const/scoreValues";
 import { getPlayerList } from "@/features/player/libs/indexedDbPlayer";
 import { getRule } from "@/features/ruleSelect/libs/indexedDbRule";
 import PlayerSwitch from "@/features/scoreSheet/components/PlayerSwitch";
@@ -13,7 +12,6 @@ import {
   saveCurrScoresYahtzee,
   saveCurrScoresYams,
 } from "@/features/scoreSheet/libs/indexedDbScoreSheet";
-import { db } from "@/libs/db";
 import { Container } from "@radix-ui/themes";
 import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -101,77 +99,23 @@ export default function PlayPage() {
   }
 
   useEffect(() => {
-    let rule: string;
-    let playerList: PlayerSetting[];
-    let currScoresYahtzee: ScoreSelectValuesYahtzee[];
-    let currScoresYams: ScoreSelectValuesYams[];
+    async function initializeValues() {
+      const rule = await getRule();
+      setRule(rule);
+      const playerList = await getPlayerList();
+      setPlayerList(playerList);
 
-    const addNoneScoresYahtzee = async (playerNum: number) => {
-      const add = async () => {
-        try {
-          await db.currScoresYahtzee.add({ ...SCORE_NONE_YAHTZEE });
-        } catch (error) {
-          throw new Error(`failed to add none scores: ${error}`);
-        }
-      };
+      const currScoresYahtzee = await getCurrScoresYahtzee();
+      const currScoresYams = await getCurrScoresYams();
+      setAllPlayerScores(
+        [...new Array(playerList.length)].map((_, i) => ({
+          yahtzee: { ...currScoresYahtzee[i] },
+          yams: { ...currScoresYams[i] },
+        })),
+      );
+    }
 
-      await db.currScoresYahtzee.clear();
-      await Promise.all([...new Array(playerNum)].map(async () => add()));
-    };
-
-    const addNoneScoresYams = async (playerNum: number) => {
-      const add = async () => {
-        try {
-          await db.currScoresYams.add({ ...SCORE_NONE_YAMS });
-        } catch (error) {
-          throw new Error(`failed to add none scores: ${error}`);
-        }
-      };
-
-      await db.currScoresYams.clear();
-      await Promise.all([...new Array(playerNum)].map(async () => add()));
-    };
-
-    getRule()
-      .then((ruleData) => {
-        rule = ruleData[0].rule;
-        setRule(rule);
-        return getPlayerList();
-      })
-      .then((playerListData) => {
-        playerList = playerListData;
-        setPlayerList(playerList);
-        return getCurrScoresYahtzee();
-      })
-      .then((currScoresYahtzeeData) => {
-        if (currScoresYahtzeeData.length !== 0) {
-          currScoresYahtzee = currScoresYahtzeeData;
-        } else if (currScoresYahtzeeData.length === 0) {
-          currScoresYahtzee = [...new Array(playerList.length)].map(() => ({
-            ...SCORE_NONE_YAHTZEE,
-          }));
-          addNoneScoresYahtzee(playerList.length);
-        }
-        return getCurrScoresYams();
-      })
-      .then((currScoresYamsData) => {
-        if (currScoresYamsData.length !== 0) {
-          currScoresYams = currScoresYamsData;
-        } else if (currScoresYamsData.length === 0) {
-          currScoresYams = [...new Array(playerList.length)].map(() => ({
-            ...SCORE_NONE_YAMS,
-          }));
-          addNoneScoresYams(playerList.length);
-        }
-      })
-      .then(() => {
-        setAllPlayerScores(
-          [...new Array(playerList.length)].map((_, i) => ({
-            yahtzee: { ...currScoresYahtzee[i] },
-            yams: { ...currScoresYams[i] },
-          })),
-        );
-      });
+    initializeValues();
   }, []);
 
   return (

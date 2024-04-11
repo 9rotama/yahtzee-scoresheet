@@ -1,3 +1,5 @@
+import { SCORE_NONE_YAHTZEE, SCORE_NONE_YAMS } from "@/const/scoreValues";
+import { getPlayerList } from "@/features/player/libs/indexedDbPlayer";
 import { db } from "@/libs/db";
 
 export async function getCurrScoresYahtzee() {
@@ -36,4 +38,32 @@ export async function saveCurrScoresYahtzee(
   } catch (error) {
     throw new Error(`failed to add ${playerName}: ${error}`);
   }
+}
+
+export async function addNoneScoresYahtzee() {
+  const add = async () => {
+    try {
+      await db.currScoresYahtzee.add({ ...SCORE_NONE_YAHTZEE });
+    } catch (error) {
+      throw new Error(`failed to add none scores: ${error}`);
+    }
+  };
+  const playerNum = (await getPlayerList()).length;
+
+  await db.currScoresYahtzee.clear();
+  await Promise.all([...new Array(playerNum)].map(async () => add()));
+}
+
+export async function addNoneScoresYams() {
+  const add = async () => {
+    try {
+      await db.currScoresYams.add({ ...SCORE_NONE_YAMS });
+    } catch (error) {
+      throw new Error(`failed to add none scores: ${error}`);
+    }
+  };
+  const playerNum = (await getPlayerList()).length;
+
+  await db.currScoresYams.clear();
+  await Promise.all([...new Array(playerNum)].map(async () => add()));
 }

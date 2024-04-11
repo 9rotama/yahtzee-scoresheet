@@ -2,6 +2,11 @@
 import MovePageButton from "@/components/MovePageButton";
 import { rules } from "@/const/rules";
 import { useRuleSelect } from "@/features/ruleSelect/hooks/useRuleSelect";
+import { saveIsGameInProgress } from "@/features/scoreSheet/libs/indexedDbIsGameInProgress";
+import {
+  addNoneScoresYahtzee,
+  addNoneScoresYams,
+} from "@/features/scoreSheet/libs/indexedDbScoreSheet";
 import { Container, Flex, Heading, Select, Text } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -58,6 +63,9 @@ export default function RulePage() {
               className={styles.fullWidth}
               onClick={() => {
                 saveRule(rule);
+                addNoneScoresYahtzee();
+                addNoneScoresYams();
+                saveIsGameInProgress("true");
               }}
             >
               <MovePageButton direction="next">
