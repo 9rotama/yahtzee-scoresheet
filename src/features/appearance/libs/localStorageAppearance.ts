@@ -1,5 +1,5 @@
 export function getLocalStorageAppearance() {
-  return localStorage.getItem("appearance");
+  return localStorage.getItem("appearance") ?? "light";
 }
 
 export function setLocalStorageAppearance(newValue: Appearance) {
