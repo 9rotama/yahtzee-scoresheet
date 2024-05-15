@@ -3,14 +3,33 @@ import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import AppearanceSwitch from "../../features/appearance/components/AppearanceSwitch";
 import HeaderLayout from "../HeaderLayout";
+import { useRouter } from "next/navigation";
 
 type PlayingHeaderProps = {
-  isFinishButtonEnabled: boolean;
+  canFinishesGame: boolean;
 };
 
-export default function PlayingHeader({
-  isFinishButtonEnabled,
-}: PlayingHeaderProps) {
+export default function PlayingHeader({ canFinishesGame }: PlayingHeaderProps) {
+  const router = useRouter();
+  const alertContent = canFinishesGame
+    ? {
+        title: "ゲームを終了",
+        message: "終了後は得点の編集ができません。終了しますか?",
+        button: "ゲームを終了する",
+        onClick: () => {
+          saveIsGameInProgress("false");
+          router.replace("/results");
+        },
+      }
+    : {
+        title: "ゲームを中断",
+        message: "得点表に空きがあります。結果を見ずにゲームを中断しますか?",
+        button: "ゲームを中断する",
+        onClick: () => {
+          saveIsGameInProgress("false");
+          router.replace("/player");
+        },
+      };
   return (
     <HeaderLayout
       left={<AppearanceSwitch />}
@@ -23,47 +42,28 @@ export default function PlayingHeader({
               </Button>
             </AlertDialog.Trigger>
             <AlertDialog.Content>
-              {isFinishButtonEnabled ? (
-                <>
-                  <AlertDialog.Title>ゲームを終了</AlertDialog.Title>
-                  <AlertDialog.Description size="2">
-                    終了後は得点の編集ができません。終了しますか?
-                  </AlertDialog.Description>
-                  <Flex gap="3" mt="4" justify="end">
-                    <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
-                        キャンセル
-                      </Button>
-                    </AlertDialog.Cancel>
-                    <AlertDialog.Action>
-                      <Link
-                        href="results"
-                        onClick={() => {
-                          saveIsGameInProgress("false");
-                        }}
-                      >
-                        <Button variant="solid" color="red">
-                          ゲームを終了する
-                        </Button>
-                      </Link>
-                    </AlertDialog.Action>
-                  </Flex>
-                </>
-              ) : (
-                <>
-                  <AlertDialog.Title>ゲームを終了</AlertDialog.Title>
-                  <AlertDialog.Description size="2">
-                    得点表に空きがあります。全ての得点を記録した後、再び終了ボタンを押してください🙏
-                  </AlertDialog.Description>
-                  <Flex gap="3" mt="4" justify="end">
-                    <AlertDialog.Cancel>
-                      <Button variant="soft" color="gray">
-                        閉じる
-                      </Button>
-                    </AlertDialog.Cancel>
-                  </Flex>
-                </>
-              )}
+              <>
+                <AlertDialog.Title>{alertContent.title}</AlertDialog.Title>
+                <AlertDialog.Description size="2">
+                  {alertContent.message}
+                </AlertDialog.Description>
+                <Flex gap="3" mt="4" justify="end">
+                  <AlertDialog.Cancel>
+                    <Button variant="soft" color="gray">
+                      キャンセル
+                    </Button>
+                  </AlertDialog.Cancel>
+                  <AlertDialog.Action>
+                    <Button
+                      variant="solid"
+                      color="red"
+                      onClick={alertContent.onClick}
+                    >
+                      {alertContent.button}
+                    </Button>
+                  </AlertDialog.Action>
+                </Flex>
+              </>
             </AlertDialog.Content>
           </AlertDialog.Root>
         </>

@@ -24,7 +24,7 @@ export default function PlayPage() {
   const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
   const scoreSheetOpacity = useMotionValue(1);
   const scoreSheetX = useMotionValue(0);
-  const isFinishButtonEnabled: boolean =
+  const isScoreFilled: boolean =
     rule === "yahtzee"
       ? !allPlayerScores
           .map((playerScore) => {
@@ -120,7 +120,7 @@ export default function PlayPage() {
 
   return (
     <>
-      <PlayingHeader isFinishButtonEnabled={isFinishButtonEnabled} />
+      <PlayingHeader canFinishesGame={isScoreFilled} />
 
       <motion.div
         initial={{ opacity: 0 }}
