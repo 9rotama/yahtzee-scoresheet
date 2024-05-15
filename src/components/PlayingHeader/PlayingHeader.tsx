@@ -17,8 +17,9 @@ export default function PlayingHeader({ canFinishesGame }: PlayingHeaderProps) {
         message: "終了後は得点の編集ができません。終了しますか?",
         button: "ゲームを終了する",
         onClick: () => {
-          saveIsGameInProgress("false");
-          router.replace("/results");
+          saveIsGameInProgress("false").then(() => {
+            router.replace("/results");
+          });
         },
       }
     : {
@@ -26,8 +27,9 @@ export default function PlayingHeader({ canFinishesGame }: PlayingHeaderProps) {
         message: "得点表に空きがあります。結果を見ずにゲームを中断しますか?",
         button: "ゲームを中断する",
         onClick: () => {
-          saveIsGameInProgress("false");
-          router.replace("/player");
+          saveIsGameInProgress("false").then(() => {
+            router.replace("/player");
+          });
         },
       };
   return (
