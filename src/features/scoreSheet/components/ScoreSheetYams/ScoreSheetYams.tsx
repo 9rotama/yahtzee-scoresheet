@@ -18,10 +18,7 @@ export default function ScoreSheetYams({
   scores,
   setScores,
 }: ScoreSheetYamsProps) {
-  const { upperSectionSum, bonus, delta, total } = useMemo(
-    () => calcScoresYams(scores),
-    [scores],
-  );
+  const { upperSectionSum, bonus, delta, total } = calcScoresYams(scores);
 
   const bonusDisplay =
     upperSectionSum > MIN_SCORE_FOR_BONUS_YAMS

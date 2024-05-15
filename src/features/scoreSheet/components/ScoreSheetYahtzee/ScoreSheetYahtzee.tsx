@@ -18,10 +18,7 @@ export default function ScoreSheetYahtzee({
   scores,
   setScores,
 }: ScoreSheetYahtzeeProps) {
-  const { upperSectionSum, bonus, total } = useMemo(
-    () => calcScoresYahtzee(scores),
-    [scores],
-  );
+  const { upperSectionSum, bonus, total } = calcScoresYahtzee(scores);
 
   const bonusDisplay =
     upperSectionSum > MIN_SCORE_FOR_BONUS_YAHTZEE
