@@ -3,7 +3,6 @@ import {
   SCORE_SELECTS_YAMS,
 } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { useMemo } from "react";
 import calcScoresYams from "../../utils/calcScoresYams";
 import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";

@@ -3,7 +3,6 @@ import {
   SCORE_SELECTS_YAHTZEE,
 } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { useMemo } from "react";
 import calcScoresYahtzee from "../../utils/calcScoresYahtzee";
 import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
