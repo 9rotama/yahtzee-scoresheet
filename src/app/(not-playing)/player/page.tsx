@@ -45,12 +45,15 @@ export default function PlayerPage() {
             </div>
           </Flex>
           <Link
-            href="/rule"
+            href={playerList?.length === 0 ? "" : "/rule"}
             onClick={() => {
               savePlayer();
             }}
           >
-            <MovePageButton direction="next">
+            <MovePageButton
+              direction="next"
+              disabled={playerList?.length === 0}
+            >
               <Text size="2" weight="bold">
                 決定してルール選択
               </Text>

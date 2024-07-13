@@ -3,7 +3,6 @@ import {
   SCORE_SELECTS_YAHTZEE,
 } from "@/const/scoreSelects";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { useMemo } from "react";
 import calcScoresYahtzee from "../../utils/calcScoresYahtzee";
 import CellValueAutoUpdated from "../CellValueAutoUpdated";
 import CellWithThumbnail from "../CellWithThumbnail";
@@ -18,10 +17,7 @@ export default function ScoreSheetYahtzee({
   scores,
   setScores,
 }: ScoreSheetYahtzeeProps) {
-  const { upperSectionSum, bonus, total } = useMemo(
-    () => calcScoresYahtzee(scores),
-    [scores],
-  );
+  const { upperSectionSum, bonus, total } = calcScoresYahtzee(scores);
 
   const bonusDisplay =
     upperSectionSum > MIN_SCORE_FOR_BONUS_YAHTZEE

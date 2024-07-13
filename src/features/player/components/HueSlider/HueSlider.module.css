@@ -1,0 +1,30 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  touch-action: none;
+  width: 100%;
+  height: 10px;
+}
+
+.track {
+  background: linear-gradient(
+    to right in hsl increasing hue,
+    hsl(0deg 100% 50%),
+    hsl(359deg 100% 50%)
+  );
+  border: #ccc 1px solid;
+  width: 100%;
+  height: 10px;
+  border-radius: 9999px;
+}
+
+.thumb {
+  display: block;
+  width: 6px;
+  border: #ccc 1px solid;
+  height: 20px;
+  background-color: white;
+  border-radius: 10px;
+}

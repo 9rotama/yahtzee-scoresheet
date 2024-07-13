@@ -2,6 +2,11 @@
 
 import MovePageButton from "@/components/MovePageButton";
 import PlayerColorDot from "@/components/PlayerColorDot";
+import { saveIsGameInProgress } from "@/features/scoreSheet/libs/indexedDbIsGameInProgress";
+import {
+  addNoneScoresYahtzee,
+  addNoneScoresYams,
+} from "@/features/scoreSheet/libs/indexedDbScoreSheet";
 import calcScoresYahtzee from "@/features/scoreSheet/utils/calcScoresYahtzee";
 import calcScoresYams from "@/features/scoreSheet/utils/calcScoresYams";
 import { db } from "@/libs/db";
@@ -9,14 +14,13 @@ import { Container, Flex, Heading, Table, Text } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ResultsPage() {
   const [rule, setRule] = useState<string | null>(null);
   const [playerList, setPlayerList] = useState<PlayerSetting[]>([]);
-  const [displayingPlayerIdx, setDisplayingPlayerIdx] = useState<number>(0);
   const [allPlayerScores, setAllPlayerScores] = useState<PlayerScores[]>([]);
-  const totalScores = useMemo<number[] | undefined>(() => {
+  const totalScores = (() => {
     if (rule === "yahtzee") {
       return allPlayerScores.map(
         (scores) => calcScoresYahtzee(scores.yahtzee).total,
@@ -24,12 +28,10 @@ export default function ResultsPage() {
     } else if (rule === "yams") {
       return allPlayerScores.map((scores) => calcScoresYams(scores.yams).total);
     }
-  }, [rule, allPlayerScores]);
-  const ranking = useMemo<number[] | undefined>(() => {
-    return totalScores
-      ?.map((_, i) => i)
-      .sort((a, b) => totalScores[b] - totalScores[a]);
-  }, [totalScores]);
+  })();
+  const ranking = totalScores
+    ?.map((_, i) => i)
+    .sort((a, b) => totalScores[b] - totalScores[a]);
 
   useEffect(() => {
     let rule: string;
@@ -91,29 +93,37 @@ export default function ResultsPage() {
                 <Table.ColumnHeaderCell>総得点</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
-            <Table.Body></Table.Body>
-            {ranking?.map((playerIdx, i) => (
-              <Table.Row key={playerList[playerIdx].name}>
-                <Table.Cell>
-                  <Text>{i + 1}</Text>
-                </Table.Cell>
-                <Table.Cell>
-                  <Flex direction="row" align="center" gap="3">
-                    <PlayerColorDot
-                      colorHue={playerList[playerIdx].colorHue}
-                      size={6}
-                    />
-                    <Text>{playerList[playerIdx].name}</Text>
-                  </Flex>
-                </Table.Cell>
-                <Table.Cell>
-                  <Text>{totalScores ? totalScores[playerIdx] : null}</Text>
-                </Table.Cell>
-              </Table.Row>
-            ))}
+            <Table.Body>
+              {ranking?.map((playerIdx, i) => (
+                <Table.Row key={playerList[playerIdx].name}>
+                  <Table.Cell>
+                    <Text>{i + 1}</Text>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Flex direction="row" align="center" gap="3">
+                      <PlayerColorDot
+                        colorHue={playerList[playerIdx].colorHue}
+                        size={6}
+                      />
+                      <Text>{playerList[playerIdx].name}</Text>
+                    </Flex>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Text>{totalScores ? totalScores[playerIdx] : null}</Text>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
           </Table.Root>
           <Flex direction="column" gap="2">
-            <Link href="/play">
+            <Link
+              href="/play"
+              onClick={() => {
+                addNoneScoresYahtzee();
+                addNoneScoresYams();
+                saveIsGameInProgress("true");
+              }}
+            >
               <MovePageButton variant="outline" color="jade" direction="next">
                 <Text size="2" weight="bold">
                   同じ設定 / 同じプレイヤーでプレイ

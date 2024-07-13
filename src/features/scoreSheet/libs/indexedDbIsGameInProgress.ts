@@ -3,7 +3,13 @@ import { db } from "@/libs/db";
 export async function getIsGameInProgress() {
   return db.isGameInProgress
     .toArray()
-    .then((data) => (data.length === 0 ? "false" : "true"));
+    .then((data) =>
+      data.length === 0
+        ? false
+        : data[0].isGameInProgress === "true"
+        ? true
+        : false,
+    );
 }
 
 export async function saveIsGameInProgress(value: "true" | "false") {

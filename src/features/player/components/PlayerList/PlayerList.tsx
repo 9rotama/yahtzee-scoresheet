@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import styles from "./PlayerList.module.css";
+import HueSlider from "../HueSlider";
 
 type PlayerEditPopoverProps = {
   name: string;
@@ -68,16 +69,19 @@ function PlayerEditPopover(props: PlayerEditPopoverProps) {
                 Player color
               </Text>
             </Label>
-            <PlayerColorDot colorHue={value.colorHue} size={20} />
-            <Slider
-              id="player-color"
-              color="jade"
-              defaultValue={[props.colorHue]}
-              onValueChange={(valueChanged) => {
-                setValue({ ...value, colorHue: valueChanged[0] });
-              }}
-              max={360}
-            />
+            <Flex direction="row" align="center" gap="2">
+              <Flex grow="1">
+                <PlayerColorDot colorHue={value.colorHue} size={20} />
+              </Flex>
+              <HueSlider
+                id="player-color"
+                defaultValue={[props.colorHue]}
+                onValueChange={(valueChanged: number[]) => {
+                  setValue({ ...value, colorHue: valueChanged[0] });
+                }}
+                max={360}
+              />
+            </Flex>
           </Flex>
           <Popover.Close>
             <Button
