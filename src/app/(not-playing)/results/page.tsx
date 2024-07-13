@@ -93,26 +93,27 @@ export default function ResultsPage() {
                 <Table.ColumnHeaderCell>総得点</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
-            <Table.Body></Table.Body>
-            {ranking?.map((playerIdx, i) => (
-              <Table.Row key={playerList[playerIdx].name}>
-                <Table.Cell>
-                  <Text>{i + 1}</Text>
-                </Table.Cell>
-                <Table.Cell>
-                  <Flex direction="row" align="center" gap="3">
-                    <PlayerColorDot
-                      colorHue={playerList[playerIdx].colorHue}
-                      size={6}
-                    />
-                    <Text>{playerList[playerIdx].name}</Text>
-                  </Flex>
-                </Table.Cell>
-                <Table.Cell>
-                  <Text>{totalScores ? totalScores[playerIdx] : null}</Text>
-                </Table.Cell>
-              </Table.Row>
-            ))}
+            <Table.Body>
+              {ranking?.map((playerIdx, i) => (
+                <Table.Row key={playerList[playerIdx].name}>
+                  <Table.Cell>
+                    <Text>{i + 1}</Text>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Flex direction="row" align="center" gap="3">
+                      <PlayerColorDot
+                        colorHue={playerList[playerIdx].colorHue}
+                        size={6}
+                      />
+                      <Text>{playerList[playerIdx].name}</Text>
+                    </Flex>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Text>{totalScores ? totalScores[playerIdx] : null}</Text>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
           </Table.Root>
           <Flex direction="column" gap="2">
             <Link
