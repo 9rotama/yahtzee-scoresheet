@@ -31,7 +31,7 @@ export class GameState extends Dexie {
     super("gameState");
     this.version(1)
       .stores({
-        playerList: "++id, name, colorHue",
+        playerList: "id, name, colorHue",
         rule: "rule",
         isGameInProgress: "isGameInProgress",
         currScoresYahtzee:
