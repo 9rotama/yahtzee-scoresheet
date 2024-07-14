@@ -17,7 +17,7 @@ export async function saveCurrScoresYams(
   newValue: string,
 ) {
   try {
-    await db.currScoresYams.update(playerIdx + 1, {
+    await db.currScoresYams.update(playerIdx, {
       [category]: newValue,
     });
   } catch (error) {
@@ -32,7 +32,7 @@ export async function saveCurrScoresYahtzee(
   newValue: string,
 ) {
   try {
-    await db.currScoresYahtzee.update(playerIdx + 1, {
+    await db.currScoresYahtzee.update(playerIdx, {
       [category]: newValue,
     });
   } catch (error) {
@@ -41,9 +41,9 @@ export async function saveCurrScoresYahtzee(
 }
 
 export async function addNoneScoresYahtzee() {
-  const add = async () => {
+  const add = async (playerId: number) => {
     try {
-      await db.currScoresYahtzee.add({ ...SCORE_NONE_YAHTZEE });
+      await db.currScoresYahtzee.add({ id: playerId, ...SCORE_NONE_YAHTZEE });
     } catch (error) {
       throw new Error(`failed to add none scores: ${error}`);
     }
@@ -51,13 +51,13 @@ export async function addNoneScoresYahtzee() {
   const playerNum = (await getPlayerList()).length;
 
   await db.currScoresYahtzee.clear();
-  await Promise.all([...new Array(playerNum)].map(async () => add()));
+  await Promise.all([...new Array(playerNum)].map(async (_, i) => add(i)));
 }
 
 export async function addNoneScoresYams() {
-  const add = async () => {
+  const add = async (playerId: number) => {
     try {
-      await db.currScoresYams.add({ ...SCORE_NONE_YAMS });
+      await db.currScoresYams.add({ id: playerId, ...SCORE_NONE_YAMS });
     } catch (error) {
       throw new Error(`failed to add none scores: ${error}`);
     }
@@ -65,5 +65,5 @@ export async function addNoneScoresYams() {
   const playerNum = (await getPlayerList()).length;
 
   await db.currScoresYams.clear();
-  await Promise.all([...new Array(playerNum)].map(async () => add()));
+  await Promise.all([...new Array(playerNum)].map(async (_, i) => add(i)));
 }

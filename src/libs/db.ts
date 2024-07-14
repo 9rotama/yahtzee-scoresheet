@@ -1,7 +1,7 @@
 import Dexie, { Table } from "dexie";
 
 type PlayerSettingTable = {
-  id?: number;
+  id: number;
 } & PlayerSetting;
 
 type RuleTable = {
@@ -13,11 +13,11 @@ type isGameInProgressTable = {
 };
 
 type CurrScoresYahtzeeTable = {
-  id?: number;
+  id: number;
 } & ScoreSelectValuesYahtzee;
 
 type CurrScoresYamsTable = {
-  id?: number;
+  id: number;
 } & ScoreSelectValuesYams;
 
 export class GameState extends Dexie {
@@ -35,9 +35,9 @@ export class GameState extends Dexie {
         rule: "rule",
         isGameInProgress: "isGameInProgress",
         currScoresYahtzee:
-          "++id, aces, twos, threes, fours, fives, sixes, threeDice, fourDice, fullHouse, sStraight, lStraight, chance, yahtzee",
+          "id, aces, twos, threes, fours, fives, sixes, threeDice, fourDice, fullHouse, sStraight, lStraight, chance, yahtzee",
         currScoresYams:
-          "++id, aces, twos, threes, fours, fives, sixes, plus, minus, fourDice, fullHouse, sStraight, lStraight, rigole, yahtzee",
+          "id, aces, twos, threes, fours, fives, sixes, plus, minus, fourDice, fullHouse, sStraight, lStraight, rigole, yahtzee",
       })
       .upgrade((tx) => {
         const defaultIsGameInProgress = [{ isGameInProgress: "false" }];
