@@ -1,0 +1,7 @@
+# lefthook.yml
+
+pre-push:
+  commands:
+    lint:
+      run: pnpm biome check --write {staged_files}
+      stage_fixed: true
