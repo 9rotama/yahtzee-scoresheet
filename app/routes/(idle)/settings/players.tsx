@@ -1,9 +1,8 @@
-import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router";
 import img from "~/assets/players.png";
-import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Button } from "~/components/ui/button";
 import { PlayerList } from "~/features/settings/components/player-list";
-import { PlayerListItem } from "~/features/settings/components/player-list-item";
 
 export default function Players() {
   return (
@@ -14,12 +13,14 @@ export default function Players() {
       <div className="w-full mt-8">
         <PlayerList defaultPlayers={undefined} />
       </div>
-
       <Button
         variant="default"
         className="mt-16 w-full h-12 font-bold rounded-full"
+        asChild
       >
-        決定してルール選択へ <ArrowRight />
+        <Link to="/settings/rules">
+          決定してルール選択へ <ArrowRight />
+        </Link>
       </Button>
     </div>
   );

@@ -11,7 +11,8 @@ export default [
 
     layout("routes/(idle)/layout.tsx", [
       route("settings/players", "routes/(idle)/settings/players.tsx"),
-      //route("settings/rules", "routes/home.tsx"),
+      route("settings/rules", "routes/(idle)/settings/rules.tsx"),
+
       //route("histories", "routes/home.tsx"),
       //route("histories/:id", "routes/home.tsx"),
       //route("results/:id", "routes/home.tsx"),
