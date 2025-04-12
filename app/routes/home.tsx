@@ -1,7 +1,7 @@
 export function meta() {
-	return [{ title: "yathzee-scoresheet" }];
+  return [{ title: "yathzee-scoresheet" }];
 }
 
 export default function Home() {
-	return <div className="">aiueo</div>;
+  return <div className="">home</div>;
 }

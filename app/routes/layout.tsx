@@ -1,9 +1,9 @@
 import { Outlet } from "react-router";
 
 export default function RootLayout() {
-	return (
-		<div className="mx-auto container">
-			<Outlet />
-		</div>
-	);
+  return (
+    <div className="mx-auto container">
+      <Outlet />
+    </div>
+  );
 }

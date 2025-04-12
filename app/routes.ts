@@ -7,9 +7,10 @@ import {
 
 export default [
   layout("routes/layout.tsx", [
-    layout("routes/idle-layout.tsx", [
-      index("routes/home.tsx"),
-      //route("settings/players", "routes/home.tsx"),
+    index("routes/home.tsx"),
+
+    layout("routes/(idle)/layout.tsx", [
+      route("settings/players", "routes/(idle)/settings/players.tsx"),
       //route("settings/rules", "routes/home.tsx"),
       //route("histories", "routes/home.tsx"),
       //route("histories/:id", "routes/home.tsx"),
