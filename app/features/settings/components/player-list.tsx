@@ -1,9 +1,8 @@
 import { Delete, Edit2, Plus, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
-import { nanoid } from "nanoid";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import type { Player } from "../models/player";
+import type { Player } from "../models";
 import { PlayerListItem } from "./player-list-item";
 
 function Empty() {
@@ -18,28 +17,13 @@ function Empty() {
 }
 
 type Props = {
-  defaultPlayers: Player[] | undefined;
+  players: Player[];
+  onAdd: () => void;
+  onDelete: (id: string) => void;
+  onEdit: (data: Player) => void;
 };
 
-export function PlayerList({ defaultPlayers }: Props) {
-  const [players, setPlayers] = useState<Player[]>(defaultPlayers || []);
-
-  const handleAddPlayer = useCallback(() => {
-    const newPlayer: Player = {
-      id: nanoid(),
-      name: `プレイヤー ${players.length + 1}`,
-    };
-    setPlayers((prev) => [...prev, newPlayer]);
-  }, [players.length]);
-
-  const handleDeletePlayer = useCallback((id: string) => {
-    setPlayers((prev) => prev.filter((player) => player.id !== id));
-  }, []);
-
-  const handleEditPlayer = useCallback((data: Player) => {
-    setPlayers((prev) => prev.map((p) => (p.id === data.id ? data : p)));
-  }, []);
-
+export function PlayerList({ players, onAdd, onDelete, onEdit }: Props) {
   return (
     <>
       <ScrollArea className="relative p-4 w-full flex flex-col h-60">
@@ -49,8 +33,8 @@ export function PlayerList({ defaultPlayers }: Props) {
               <PlayerListItem
                 key={player.id}
                 player={player}
-                onDelete={handleDeletePlayer}
-                onEdit={handleEditPlayer}
+                onDelete={onDelete}
+                onEdit={onEdit}
               />
             ))}
           </div>
@@ -63,7 +47,7 @@ export function PlayerList({ defaultPlayers }: Props) {
         aria-label="add player"
         variant="outline"
         className="mt-2 w-full"
-        onClick={handleAddPlayer}
+        onClick={onAdd}
       >
         <Plus />
       </Button>

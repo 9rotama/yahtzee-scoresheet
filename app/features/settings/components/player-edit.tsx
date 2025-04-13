@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/drawer";
 import { Input } from "~/components/ui/input";
 import { Width } from "~/components/width";
-import type { Player } from "../models/player";
+import type { Player } from "../models";
 import { useCallback, useMemo, useState } from "react";
 import { Label } from "~/components/ui/label";
 

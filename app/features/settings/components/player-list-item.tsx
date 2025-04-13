@@ -2,7 +2,7 @@ import { ColorDot } from "~/components/color-dot";
 import { PlayerEdit } from "./player-edit";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
-import type { Player } from "../models/player";
+import type { Player } from "../models";
 
 type Props = {
   player: Player;
