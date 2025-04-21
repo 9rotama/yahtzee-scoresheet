@@ -1,3 +1,4 @@
+import { scan } from "react-scan";
 import {
   Links,
   Meta,
@@ -6,12 +7,13 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
 } from "react-router";
-
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { ThemeProvider } from "./components/theme-provider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/query-client";
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,6 +29,13 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    // Make sure to run react-scan only after hydration
+    scan({
+      enabled: true,
+    });
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -53,7 +62,9 @@ export default function App() {
       disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>
-        <Outlet />
+        <NuqsAdapter>
+          <Outlet />
+        </NuqsAdapter>
       </QueryClientProvider>
     </ThemeProvider>
   );

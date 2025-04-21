@@ -17,6 +17,8 @@ export default [
       //route("histories/:id", "routes/home.tsx"),
       //route("results/:id", "routes/home.tsx"),
     ]),
-    //layout("routes/playing-layout.tsx", [route("playing", "routes/home.tsx")]),
+    layout("routes/(playing)/layout.tsx", [
+      route("game", "routes/(playing)/game.tsx"),
+    ]),
   ]),
 ] satisfies RouteConfig;
