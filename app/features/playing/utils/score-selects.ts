@@ -24,12 +24,12 @@ export const scoreSelectionsYahtzee: {
 export const scoreSelectionsYams: {
   [key in YamsCategories]: (undefined | number)[];
 } = {
-  aces: [undefined, 1, 2, 3, 4, 5],
-  twos: [undefined, 2, 4, 6, 8, 10],
-  threes: [undefined, 3, 6, 9, 12, 15],
-  fours: [undefined, 4, 8, 12, 16, 20],
-  fives: [undefined, 5, 10, 15, 20, 25],
-  sixes: [undefined, 6, 12, 18, 24, 30],
+  aces: [undefined, 0, 1, 2, 3, 4, 5],
+  twos: [undefined, 0, 2, 4, 6, 8, 10],
+  threes: [undefined, 0, 3, 6, 9, 12, 15],
+  fours: [undefined, 0, 4, 8, 12, 16, 20],
+  fives: [undefined, 0, 5, 10, 15, 20, 25],
+  sixes: [undefined, 0, 6, 12, 18, 24, 30],
   plus: [undefined, ...range(5, 6 * diceNum, 1)],
   minus: [undefined, ...range(5, 6 * diceNum, 1)],
   "four-dice": [undefined, 0, ...range(40 + 4, 40 + 6 * diceNum, 1)],
@@ -43,23 +43,6 @@ export const scoreSelectionsYams: {
     ...Array.from({ length: 6 }, (_, i) => 50 + (i + 1) * diceNum),
   ],
 };
-
-export const scoreSelectedIdxYams: { [key in YamsCategories]: undefined } = {
-  aces: undefined,
-  twos: undefined,
-  threes: undefined,
-  fours: undefined,
-  fives: undefined,
-  sixes: undefined,
-  plus: undefined,
-  minus: undefined,
-  "four-dice": undefined,
-  "full-house": undefined,
-  "s-straight": undefined,
-  "l-straight": undefined,
-  rigole: undefined,
-  yahtzee: undefined,
-} as const;
 
 function range(start: number, end: number, step: number): number[] {
   const result = [];

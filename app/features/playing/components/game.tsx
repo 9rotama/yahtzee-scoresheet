@@ -3,6 +3,7 @@ import type { Player, Rule } from "~/features/settings/models";
 import { PlayerSwitch } from "./player-switch";
 import { useCallback } from "react";
 import { YahtzeeSheet } from "./yahtzee-sheet";
+import { YamsSheet } from "./yams-sheet";
 
 type Props = {
   players: Player[];
@@ -37,7 +38,7 @@ export function Game({ players, rule }: Props) {
         onLeftClick={handleLeftClick}
         onRightClick={handleRightClick}
       />
-      <YahtzeeSheet />
+      {rule.name === "yahtzee" ? <YahtzeeSheet /> : <YamsSheet />}
     </div>
   );
 }
