@@ -2,7 +2,14 @@ import { Table, TableBody } from "~/components/ui/table";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
 import { useCallback, useState } from "react";
-import { minBonusYams, scoreSelectionsYams } from "../utils/score-selects";
+import {
+  minBonusYams,
+  scoreSelectionsYams,
+  type ScoresYams,
+} from "../utils/score-selects";
+import type { Player } from "~/features/settings/models";
+import { useMutation } from "@tanstack/react-query";
+import { updateCurrentScoresYams } from "../req/index.client";
 
 const items: {
   [key in YamsCategories]: {
@@ -38,9 +45,7 @@ const items: {
   yahtzee: { name: "ヤッツィー", selections: scoreSelectionsYams.yahtzee },
 } as const;
 
-const scoreSelectedIdxInit: {
-  [key in YamsCategories]: number;
-} = {
+const scoreSelectedIdxInit: ScoresYams = {
   aces: 0,
   twos: 0,
   threes: 0,
@@ -77,25 +82,45 @@ const thirdGroup: YamsCategories[] = [
   "yahtzee",
 ] as const;
 
-export function YamsSheet() {
-  const [selectedIdxes, setSelectedIdxes] =
-    useState<{
-      [key in YamsCategories]: number;
-    }>(scoreSelectedIdxInit);
+type Props = {
+  players: Player[];
+  currentPlayerIdx: number;
+  initialScores: ScoresYams[] | undefined;
+};
 
-  const handleSelect = useCallback((category: YamsCategories, idx: number) => {
-    setSelectedIdxes((prev) => ({
-      ...prev,
-      [category]: idx,
-    }));
-  }, []);
+export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
+  const [scores, setScores] = useState<ScoresYams[]>(
+    initialScores || players.map(() => scoreSelectedIdxInit),
+  );
+  const currentPlayerScores = scores[currentPlayerIdx];
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      await updateCurrentScoresYams(scores);
+    },
+  });
+
+  const handleSelect = useCallback(
+    (category: YamsCategories, idx: number) => {
+      setScores((prev) => {
+        const newScores = [...prev];
+        newScores[currentPlayerIdx] = {
+          ...newScores[currentPlayerIdx],
+          [category]: idx,
+        };
+        return newScores;
+      });
+      mutate();
+    },
+    [currentPlayerIdx, mutate],
+  );
 
   const smallTotal = firstGroup.reduce((acc, c) => {
-    const idx = selectedIdxes[c];
+    const idx = currentPlayerScores[c];
     return acc + (items[c].selections[idx] || 0);
   }, 0);
-  const plus = items.plus.selections[selectedIdxes.plus];
-  const minus = items.plus.selections[selectedIdxes.minus];
+  const plus = items.plus.selections[currentPlayerScores.plus];
+  const minus = items.plus.selections[currentPlayerScores.minus];
 
   const delta =
     plus !== undefined && minus !== undefined
@@ -108,12 +133,12 @@ export function YamsSheet() {
     smallTotal +
     bonus +
     secondGroup.reduce((acc, c) => {
-      const idx = selectedIdxes[c];
+      const idx = currentPlayerScores[c];
       if (idx === undefined) return acc;
       return acc + (items[c].selections[idx] || 0);
     }, 0) +
     thirdGroup.reduce((acc, c) => {
-      const idx = selectedIdxes[c];
+      const idx = currentPlayerScores[c];
       if (idx === undefined) return acc;
       return acc + (items[c].selections[idx] || 0);
     }, 0);
@@ -130,7 +155,7 @@ export function YamsSheet() {
                 score={
                   <SheetSelect
                     name={items[c].name}
-                    selectedIdx={selectedIdxes[c]}
+                    selectedIdx={currentPlayerScores[c]}
                     selections={items[c].selections}
                     onSelect={(idx) => handleSelect(c, idx)}
                   />
@@ -156,7 +181,7 @@ export function YamsSheet() {
                 score={
                   <SheetSelect
                     name={items[c].name}
-                    selectedIdx={selectedIdxes[c]}
+                    selectedIdx={currentPlayerScores[c]}
                     selections={items[c].selections}
                     onSelect={(idx) => handleSelect(c, idx)}
                   />
@@ -181,7 +206,7 @@ export function YamsSheet() {
                 score={
                   <SheetSelect
                     name={items[c].name}
-                    selectedIdx={selectedIdxes[c]}
+                    selectedIdx={currentPlayerScores[c]}
                     selections={items[c].selections}
                     onSelect={(idx) => handleSelect(c, idx)}
                   />

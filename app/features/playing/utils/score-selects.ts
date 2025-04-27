@@ -22,7 +22,7 @@ export const scoreSelectionsYahtzee: {
 } as const;
 
 export const scoreSelectionsYams: {
-  [key in YamsCategories]: (undefined | number)[];
+  [key in YamsCategories]: (number | undefined)[];
 } = {
   aces: [undefined, 0, 1, 2, 3, 4, 5],
   twos: [undefined, 0, 2, 4, 6, 8, 10],
@@ -42,6 +42,14 @@ export const scoreSelectionsYams: {
     0,
     ...Array.from({ length: 6 }, (_, i) => 50 + (i + 1) * diceNum),
   ],
+};
+
+export type ScoresYahtzee = {
+  [key in YahtzeeCategories]: number;
+};
+
+export type ScoresYams = {
+  [key in YamsCategories]: number;
 };
 
 function range(start: number, end: number, step: number): number[] {

@@ -5,7 +5,11 @@ import { memo, use, useCallback, useMemo, useState } from "react";
 import {
   minBonusYahtzee,
   scoreSelectionsYahtzee,
+  type ScoresYahtzee,
 } from "../utils/score-selects";
+import type { Player } from "~/features/settings/models";
+import { useMutation } from "@tanstack/react-query";
+import { updateCurrentScoresYahtzee } from "../req/index.client";
 
 const items = {
   aces: { name: "エース", selections: scoreSelectionsYahtzee.aces },
@@ -38,9 +42,7 @@ const items = {
   yahtzee: { name: "ヤッツィー", selections: scoreSelectionsYahtzee.yahtzee },
 } as const;
 
-const scoreSelectedIdxInit: {
-  [key in YahtzeeCategories]: number;
-} = {
+const scoreSelectionsInit: ScoresYahtzee = {
   aces: 0,
   twos: 0,
   threes: 0,
@@ -76,24 +78,45 @@ const thirdGroup: YahtzeeCategories[] = [
   "yahtzee",
 ] as const;
 
-export function YahtzeeSheet() {
-  const [selectedIdxes, setSelectedIdxes] =
-    useState<{
-      [key in YahtzeeCategories]: number;
-    }>(scoreSelectedIdxInit);
+type Props = {
+  players: Player[];
+  currentPlayerIdx: number;
+  initialScores: ScoresYahtzee[] | undefined;
+};
+
+export function YahtzeeSheet({
+  players,
+  currentPlayerIdx,
+  initialScores,
+}: Props) {
+  const [scores, setScores] = useState<ScoresYahtzee[]>(
+    initialScores || players.map(() => scoreSelectionsInit),
+  );
+  const currentPlayerScores = scores[currentPlayerIdx];
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      await updateCurrentScoresYahtzee(scores);
+    },
+  });
 
   const handleSelect = useCallback(
     (category: YahtzeeCategories, idx: number) => {
-      setSelectedIdxes((prev) => ({
-        ...prev,
-        [category]: idx,
-      }));
+      setScores((prev) => {
+        const newScores = [...prev];
+        newScores[currentPlayerIdx] = {
+          ...newScores[currentPlayerIdx],
+          [category]: idx,
+        };
+        return newScores;
+      });
+      mutate();
     },
-    [],
+    [currentPlayerIdx, mutate],
   );
 
   const smallTotal = firstGroup.reduce((acc, c) => {
-    const idx = selectedIdxes[c];
+    const idx = currentPlayerScores[c];
     return acc + (items[c].selections[idx] || 0);
   }, 0);
 
@@ -103,12 +126,12 @@ export function YahtzeeSheet() {
     smallTotal +
     bonus +
     secondGroup.reduce((acc, c) => {
-      const idx = selectedIdxes[c];
+      const idx = currentPlayerScores[c];
       if (idx === undefined) return acc;
       return acc + (items[c].selections[idx] || 0);
     }, 0) +
     thirdGroup.reduce((acc, c) => {
-      const idx = selectedIdxes[c];
+      const idx = currentPlayerScores[c];
       if (idx === undefined) return acc;
       return acc + (items[c].selections[idx] || 0);
     }, 0);
@@ -125,7 +148,7 @@ export function YahtzeeSheet() {
                 score={
                   <SheetSelect
                     name={items[c].name}
-                    selectedIdx={selectedIdxes[c]}
+                    selectedIdx={currentPlayerScores[c]}
                     selections={items[c].selections}
                     onSelect={(idx) => handleSelect(c, idx)}
                   />
@@ -151,7 +174,7 @@ export function YahtzeeSheet() {
                 score={
                   <SheetSelect
                     name={items[c].name}
-                    selectedIdx={selectedIdxes[c]}
+                    selectedIdx={currentPlayerScores[c]}
                     selections={items[c].selections}
                     onSelect={(idx) => handleSelect(c, idx)}
                   />
@@ -171,7 +194,7 @@ export function YahtzeeSheet() {
                 score={
                   <SheetSelect
                     name={items[c].name}
-                    selectedIdx={selectedIdxes[c]}
+                    selectedIdx={currentPlayerScores[c]}
                     selections={items[c].selections}
                     onSelect={(idx) => handleSelect(c, idx)}
                   />

@@ -1,14 +1,14 @@
 import { openDB, type DBSchema } from "idb";
-import type { Player, Rule } from "~/features/settings/models";
+import type { CurrentSheet, PreviousSheet } from "~/models/sheet";
 
 interface DB extends DBSchema {
   currentSheet: {
     key: "single";
-    value: { players: Player[]; rule: Rule };
+    value: CurrentSheet;
   };
   previousSheets: {
     key: string;
-    value: { players: Player[]; rule: Rule; date: number };
+    value: PreviousSheet;
   };
 }
 
@@ -25,13 +25,13 @@ export async function initCurrentSheet() {
   if (currentSheet) {
     await db.put(
       "currentSheet",
-      { players: [], rule: { name: "yams" } },
+      { players: [], rule: undefined, scores: undefined },
       "single",
     );
   } else {
     await db.add(
       "currentSheet",
-      { players: [], rule: { name: "yams" } },
+      { players: [], rule: undefined, scores: undefined },
       "single",
     );
   }
@@ -42,10 +42,7 @@ export async function getCurrentSheet() {
   return currentSheet;
 }
 
-export async function updateCurrentSheet(sheet: {
-  players: Player[];
-  rule: Rule;
-}) {
+export async function updateCurrentSheet(sheet: CurrentSheet) {
   const currentSheet = await db.get("currentSheet", "single");
   if (!currentSheet) throw new Error("no current sheet found");
 
