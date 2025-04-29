@@ -1,7 +1,15 @@
 import { Table, TableBody } from "~/components/ui/table";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
-import { memo, use, useCallback, useMemo, useState } from "react";
+import {
+  memo,
+  use,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   minBonusYahtzee,
   scoreSelectionsYahtzee,
@@ -10,37 +18,10 @@ import {
 import type { Player } from "~/features/settings/models";
 import { useMutation } from "@tanstack/react-query";
 import { updateCurrentScoresYahtzee } from "../req/index.client";
-
-const items = {
-  aces: { name: "エース", selections: scoreSelectionsYahtzee.aces },
-  twos: { name: "デュース", selections: scoreSelectionsYahtzee.twos },
-  threes: { name: "トレイ", selections: scoreSelectionsYahtzee.threes },
-  fours: { name: "フォー", selections: scoreSelectionsYahtzee.fours },
-  fives: { name: "ファイブ", selections: scoreSelectionsYahtzee.fives },
-  sixes: { name: "シックス", selections: scoreSelectionsYahtzee.sixes },
-  chance: { name: "チャンス", selections: scoreSelectionsYahtzee.chance },
-  "three-dice": {
-    name: "スリーダイス",
-    selections: scoreSelectionsYahtzee["three-dice"],
-  },
-  "four-dice": {
-    name: "フォーダイス",
-    selections: scoreSelectionsYahtzee["four-dice"],
-  },
-  "full-house": {
-    name: "フルハウス",
-    selections: scoreSelectionsYahtzee["full-house"],
-  },
-  "s-straight": {
-    name: "S・ストレート",
-    selections: scoreSelectionsYahtzee["s-straight"],
-  },
-  "l-straight": {
-    name: "L・ストレート",
-    selections: scoreSelectionsYahtzee["l-straight"],
-  },
-  yahtzee: { name: "ヤッツィー", selections: scoreSelectionsYahtzee.yahtzee },
-} as const;
+import type { YahtzeeCategories } from "../utils/categories";
+import { setIsCompleteContext } from "~/routes/(playing)/layout";
+import { checkComplete } from "../utils/check-complete";
+import { items } from "../utils/yahtzee-items";
 
 const scoreSelectionsInit: ScoresYahtzee = {
   aces: 0,
@@ -93,6 +74,7 @@ export function YahtzeeSheet({
     initialScores || players.map(() => scoreSelectionsInit),
   );
   const currentPlayerScores = scores[currentPlayerIdx];
+  const setIsComplete = useContext(setIsCompleteContext);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -114,6 +96,9 @@ export function YahtzeeSheet({
     },
     [currentPlayerIdx, mutate],
   );
+  useEffect(() => {
+    setIsComplete(checkComplete(scores));
+  }, [scores, setIsComplete]);
 
   const smallTotal = firstGroup.reduce((acc, c) => {
     const idx = currentPlayerScores[c];

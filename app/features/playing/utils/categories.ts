@@ -1,4 +1,4 @@
-type YahtzeeCategories =
+export type YahtzeeCategories =
   | "aces"
   | "twos"
   | "threes"
@@ -13,7 +13,7 @@ type YahtzeeCategories =
   | "chance"
   | "yahtzee";
 
-type YamsCategories =
+export type YamsCategories =
   | "aces"
   | "twos"
   | "threes"

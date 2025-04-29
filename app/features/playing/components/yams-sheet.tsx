@@ -1,7 +1,7 @@
 import { Table, TableBody } from "~/components/ui/table";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   minBonusYams,
   scoreSelectionsYams,
@@ -10,40 +10,10 @@ import {
 import type { Player } from "~/features/settings/models";
 import { useMutation } from "@tanstack/react-query";
 import { updateCurrentScoresYams } from "../req/index.client";
-
-const items: {
-  [key in YamsCategories]: {
-    name: string;
-    selections: (number | undefined)[];
-  };
-} = {
-  aces: { name: "エース", selections: scoreSelectionsYams.aces },
-  twos: { name: "デュース", selections: scoreSelectionsYams.twos },
-  threes: { name: "トレイ", selections: scoreSelectionsYams.threes },
-  fours: { name: "フォー", selections: scoreSelectionsYams.fours },
-  fives: { name: "ファイブ", selections: scoreSelectionsYams.fives },
-  sixes: { name: "シックス", selections: scoreSelectionsYams.sixes },
-  plus: { name: "プラス", selections: scoreSelectionsYams.plus },
-  minus: { name: "マイナス", selections: scoreSelectionsYams.minus },
-  rigole: { name: "リゴール", selections: scoreSelectionsYams.rigole },
-  "four-dice": {
-    name: "フォーダイス",
-    selections: scoreSelectionsYams["four-dice"],
-  },
-  "full-house": {
-    name: "フルハウス",
-    selections: scoreSelectionsYams["full-house"],
-  },
-  "s-straight": {
-    name: "S・ストレート",
-    selections: scoreSelectionsYams["s-straight"],
-  },
-  "l-straight": {
-    name: "L・ストレート",
-    selections: scoreSelectionsYams["l-straight"],
-  },
-  yahtzee: { name: "ヤッツィー", selections: scoreSelectionsYams.yahtzee },
-} as const;
+import type { YamsCategories } from "../utils/categories";
+import { setIsCompleteContext } from "~/routes/(playing)/layout";
+import { checkComplete } from "../utils/check-complete";
+import { items } from "../utils/yams-items";
 
 const scoreSelectedIdxInit: ScoresYams = {
   aces: 0,
@@ -99,6 +69,11 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
       await updateCurrentScoresYams(scores);
     },
   });
+  const setIsComplete = useContext(setIsCompleteContext);
+
+  useEffect(() => {
+    setIsComplete(checkComplete(scores));
+  }, [scores, setIsComplete]);
 
   const handleSelect = useCallback(
     (category: YamsCategories, idx: number) => {
