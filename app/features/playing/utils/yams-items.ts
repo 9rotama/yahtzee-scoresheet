@@ -1,7 +1,7 @@
 import type { YamsCategories } from "./categories";
 import { scoreSelectionsYams } from "./score-selects";
 
-export const items: {
+export const yamsItems: {
   [key in YamsCategories]: {
     name: string;
     selections: (number | undefined)[];

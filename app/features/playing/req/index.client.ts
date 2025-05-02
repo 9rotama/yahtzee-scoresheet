@@ -7,9 +7,9 @@ import type { ScoresYahtzee, ScoresYams } from "../utils/score-selects";
 
 export async function getCurrentScores() {
   const currentSheet = await getCurrentSheet();
-  if (!currentSheet) await initCurrentSheet();
+  if (!currentSheet) throw new Error("no current sheet found");
 
-  const scores = currentSheet?.scores;
+  const scores = currentSheet.scores;
   return scores;
 }
 
@@ -25,4 +25,10 @@ export async function updateCurrentScoresYams(scores: ScoresYams[]) {
   if (!currentSheet) throw new Error("no current sheet found");
 
   await updateCurrentSheet({ ...currentSheet, scores });
+}
+
+export async function clearCurrentScores() {
+  const currentSheet = await getCurrentSheet();
+  if (!currentSheet) throw new Error("no current sheet found");
+  await updateCurrentSheet({ ...currentSheet, scores: [] });
 }

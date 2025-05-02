@@ -13,6 +13,7 @@ import {
 import {
   minBonusYahtzee,
   scoreSelectionsYahtzee,
+  type Index,
   type ScoresYahtzee,
 } from "../utils/score-selects";
 import type { Player } from "~/features/settings/models";
@@ -21,25 +22,29 @@ import { updateCurrentScoresYahtzee } from "../req/index.client";
 import type { YahtzeeCategories } from "../utils/categories";
 import { setIsCompleteContext } from "~/routes/(playing)/layout";
 import { checkComplete } from "../utils/check-complete";
-import { items } from "../utils/yahtzee-items";
+import { yahtzeeItems as items } from "../utils/yahtzee-items";
+import { calcYahtzee } from "../utils/calc";
 
-const scoreSelectionsInit: ScoresYahtzee = {
-  aces: 0,
-  twos: 0,
-  threes: 0,
-  fours: 0,
-  fives: 0,
-  sixes: 0,
-  "three-dice": 0,
-  "four-dice": 0,
-  "full-house": 0,
-  "s-straight": 0,
-  "l-straight": 0,
-  chance: 0,
-  yahtzee: 0,
-} as const;
+function getInitScoreSelections(playerId: string): ScoresYahtzee {
+  return {
+    playerId,
+    aces: 0 as Index,
+    twos: 0 as Index,
+    threes: 0 as Index,
+    fours: 0 as Index,
+    fives: 0 as Index,
+    sixes: 0 as Index,
+    "three-dice": 0 as Index,
+    "four-dice": 0 as Index,
+    "full-house": 0 as Index,
+    "s-straight": 0 as Index,
+    "l-straight": 0 as Index,
+    chance: 0 as Index,
+    yahtzee: 0 as Index,
+  };
+}
 
-const firstGroup: YahtzeeCategories[] = [
+const firstGroup = [
   "aces",
   "twos",
   "threes",
@@ -48,9 +53,9 @@ const firstGroup: YahtzeeCategories[] = [
   "sixes",
 ] as const;
 
-const secondGroup: YahtzeeCategories[] = ["chance"] as const;
+const secondGroup = ["chance"] as const;
 
-const thirdGroup: YahtzeeCategories[] = [
+const thirdGroup = [
   "three-dice",
   "four-dice",
   "full-house",
@@ -62,7 +67,7 @@ const thirdGroup: YahtzeeCategories[] = [
 type Props = {
   players: Player[];
   currentPlayerIdx: number;
-  initialScores: ScoresYahtzee[] | undefined;
+  initialScores: ScoresYahtzee[];
 };
 
 export function YahtzeeSheet({
@@ -71,7 +76,9 @@ export function YahtzeeSheet({
   initialScores,
 }: Props) {
   const [scores, setScores] = useState<ScoresYahtzee[]>(
-    initialScores || players.map(() => scoreSelectionsInit),
+    initialScores.length === 0
+      ? players.map((p) => getInitScoreSelections(p.id))
+      : initialScores,
   );
   const currentPlayerScores = scores[currentPlayerIdx];
   const setIsComplete = useContext(setIsCompleteContext);
@@ -79,6 +86,7 @@ export function YahtzeeSheet({
   const { mutate } = useMutation({
     mutationFn: async () => {
       await updateCurrentScoresYahtzee(scores);
+      setIsComplete(checkComplete(scores));
     },
   });
 
@@ -96,30 +104,8 @@ export function YahtzeeSheet({
     },
     [currentPlayerIdx, mutate],
   );
-  useEffect(() => {
-    setIsComplete(checkComplete(scores));
-  }, [scores, setIsComplete]);
 
-  const smallTotal = firstGroup.reduce((acc, c) => {
-    const idx = currentPlayerScores[c];
-    return acc + (items[c].selections[idx] || 0);
-  }, 0);
-
-  const bonus = smallTotal >= minBonusYahtzee ? 35 : 0;
-
-  const total =
-    smallTotal +
-    bonus +
-    secondGroup.reduce((acc, c) => {
-      const idx = currentPlayerScores[c];
-      if (idx === undefined) return acc;
-      return acc + (items[c].selections[idx] || 0);
-    }, 0) +
-    thirdGroup.reduce((acc, c) => {
-      const idx = currentPlayerScores[c];
-      if (idx === undefined) return acc;
-      return acc + (items[c].selections[idx] || 0);
-    }, 0);
+  const { smallTotal, bonus, total } = calcYahtzee(currentPlayerScores);
 
   return (
     <>

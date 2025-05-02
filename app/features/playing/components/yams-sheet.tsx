@@ -5,6 +5,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import {
   minBonusYams,
   scoreSelectionsYams,
+  type Index,
   type ScoresYams,
 } from "../utils/score-selects";
 import type { Player } from "~/features/settings/models";
@@ -13,24 +14,28 @@ import { updateCurrentScoresYams } from "../req/index.client";
 import type { YamsCategories } from "../utils/categories";
 import { setIsCompleteContext } from "~/routes/(playing)/layout";
 import { checkComplete } from "../utils/check-complete";
-import { items } from "../utils/yams-items";
+import { yamsItems as items } from "../utils/yams-items";
+import { calcYams } from "../utils/calc";
 
-const scoreSelectedIdxInit: ScoresYams = {
-  aces: 0,
-  twos: 0,
-  threes: 0,
-  fours: 0,
-  fives: 0,
-  sixes: 0,
-  "four-dice": 0,
-  "full-house": 0,
-  "s-straight": 0,
-  "l-straight": 0,
-  plus: 0,
-  minus: 0,
-  rigole: 0,
-  yahtzee: 0,
-} as const;
+function getInitScoreSelections(playerId: string): ScoresYams {
+  return {
+    playerId,
+    aces: 0 as Index,
+    twos: 0 as Index,
+    threes: 0 as Index,
+    fours: 0 as Index,
+    fives: 0 as Index,
+    sixes: 0 as Index,
+    "four-dice": 0 as Index,
+    "full-house": 0 as Index,
+    "s-straight": 0 as Index,
+    "l-straight": 0 as Index,
+    plus: 0 as Index,
+    minus: 0 as Index,
+    rigole: 0 as Index,
+    yahtzee: 0 as Index,
+  };
+}
 
 const firstGroup: YamsCategories[] = [
   "aces",
@@ -55,18 +60,22 @@ const thirdGroup: YamsCategories[] = [
 type Props = {
   players: Player[];
   currentPlayerIdx: number;
-  initialScores: ScoresYams[] | undefined;
+  initialScores: ScoresYams[];
 };
 
 export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
   const [scores, setScores] = useState<ScoresYams[]>(
-    initialScores || players.map(() => scoreSelectedIdxInit),
+    initialScores.length === 0
+      ? players.map((p) => getInitScoreSelections(p.id))
+      : initialScores,
   );
+
   const currentPlayerScores = scores[currentPlayerIdx];
 
   const { mutate } = useMutation({
     mutationFn: async () => {
       await updateCurrentScoresYams(scores);
+      setIsComplete(checkComplete(scores));
     },
   });
   const setIsComplete = useContext(setIsCompleteContext);
@@ -90,33 +99,7 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
     [currentPlayerIdx, mutate],
   );
 
-  const smallTotal = firstGroup.reduce((acc, c) => {
-    const idx = currentPlayerScores[c];
-    return acc + (items[c].selections[idx] || 0);
-  }, 0);
-  const plus = items.plus.selections[currentPlayerScores.plus];
-  const minus = items.plus.selections[currentPlayerScores.minus];
-
-  const delta =
-    plus !== undefined && minus !== undefined
-      ? Math.max(plus - minus, 0)
-      : undefined;
-
-  const bonus = smallTotal >= minBonusYams ? 35 : 0;
-
-  const total =
-    smallTotal +
-    bonus +
-    secondGroup.reduce((acc, c) => {
-      const idx = currentPlayerScores[c];
-      if (idx === undefined) return acc;
-      return acc + (items[c].selections[idx] || 0);
-    }, 0) +
-    thirdGroup.reduce((acc, c) => {
-      const idx = currentPlayerScores[c];
-      if (idx === undefined) return acc;
-      return acc + (items[c].selections[idx] || 0);
-    }, 0);
+  const { smallTotal, bonus, delta, total } = calcYams(currentPlayerScores);
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { scoreSelectionsYahtzee } from "./score-selects";
 
-export const items = {
+export const yahtzeeItems = {
   aces: { name: "エース", selections: scoreSelectionsYahtzee.aces },
   twos: { name: "デュース", selections: scoreSelectionsYahtzee.twos },
   threes: { name: "トレイ", selections: scoreSelectionsYahtzee.threes },

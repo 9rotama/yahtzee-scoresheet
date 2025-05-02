@@ -20,7 +20,7 @@ export function HydrateFallback() {
 
 export default function GamePage({ loaderData }: Route.ComponentProps) {
   const { players, rule, scores } = loaderData;
-  if (!players || players.length === 0 || !rule) return;
+  if (players.length === 0) return;
   return (
     <div className="pt-1">
       <Game players={players} rule={rule} scores={scores} />

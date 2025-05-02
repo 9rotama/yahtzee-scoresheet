@@ -7,9 +7,9 @@ import type { Player, Rule } from "../models";
 
 export async function getCurrentPlayers() {
   const currentSheet = await getCurrentSheet();
-  if (!currentSheet) await initCurrentSheet();
+  if (!currentSheet) throw new Error("no current sheet found");
 
-  const players = currentSheet?.players;
+  const players = currentSheet.players;
   return players;
 }
 
@@ -22,9 +22,9 @@ export async function updateCurrentPlayers(players: Player[]) {
 
 export async function getCurrentRule() {
   const currentSheet = await getCurrentSheet();
-  if (!currentSheet) await initCurrentSheet();
+  if (!currentSheet) throw new Error("no current sheet found");
 
-  const rule = currentSheet?.rule;
+  const rule = currentSheet.rule;
   return rule;
 }
 export async function updateCurrentRule(rule: Rule) {

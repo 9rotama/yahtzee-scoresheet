@@ -29,7 +29,7 @@ export default function Rules({ loaderData }: Route.ComponentProps) {
   const { mutate } = useMutation({
     mutationFn: async () => {
       await updateCurrentRule(rule);
-      navigate("/play");
+      navigate("/game");
     },
   });
 

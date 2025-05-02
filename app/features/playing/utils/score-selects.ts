@@ -5,8 +5,10 @@ export const diceNum = 5;
 export const minBonusYahtzee = 60;
 export const minBonusYams = 63;
 
+export type Score = number | undefined;
+
 export const scoreSelectionsYahtzee: {
-  [key in YahtzeeCategories]: (number | undefined)[];
+  [key in YahtzeeCategories]: Score[];
 } = {
   aces: [undefined, 0, 1, 2, 3, 4, 5],
   twos: [undefined, 0, 2, 4, 6, 8, 10],
@@ -24,7 +26,7 @@ export const scoreSelectionsYahtzee: {
 } as const;
 
 export const scoreSelectionsYams: {
-  [key in YamsCategories]: (number | undefined)[];
+  [key in YamsCategories]: Score[];
 } = {
   aces: [undefined, 0, 1, 2, 3, 4, 5],
   twos: [undefined, 0, 2, 4, 6, 8, 10],
@@ -46,12 +48,16 @@ export const scoreSelectionsYams: {
   ],
 };
 
-export type ScoresYahtzee = {
-  [key in YahtzeeCategories]: number;
+type PlayerId = { playerId: string };
+
+export type Index = number & { readonly __brand: "Index" };
+
+export type ScoresYahtzee = PlayerId & {
+  [key in YahtzeeCategories]: Index;
 };
 
-export type ScoresYams = {
-  [key in YamsCategories]: number;
+export type ScoresYams = PlayerId & {
+  [key in YamsCategories]: Index;
 };
 
 function range(start: number, end: number, step: number): number[] {

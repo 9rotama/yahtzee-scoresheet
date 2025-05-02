@@ -6,8 +6,8 @@ import type { Player, Rule } from "~/features/settings/models";
 
 export interface CurrentSheet {
   players: Player[];
-  rule: Rule | undefined;
-  scores: ScoresYahtzee[] | ScoresYams[] | undefined;
+  rule: Rule;
+  scores: ScoresYahtzee[] | ScoresYams[];
 }
 
 export interface PreviousSheet {

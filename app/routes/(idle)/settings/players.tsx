@@ -1,11 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import {
-  Link,
-  redirect,
-  useLoaderData,
-  useNavigate,
-  useSubmit,
-} from "react-router";
+import { useNavigate } from "react-router";
 import img from "~/assets/players.png";
 import { Button } from "~/components/ui/button";
 import { PlayerList } from "~/features/settings/components/player-list";
