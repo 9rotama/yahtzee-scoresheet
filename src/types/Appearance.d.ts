@@ -1,1 +1,0 @@
-type Appearance = "light" | "dark";

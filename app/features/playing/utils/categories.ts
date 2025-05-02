@@ -1,0 +1,30 @@
+export type YahtzeeCategories =
+  | "aces"
+  | "twos"
+  | "threes"
+  | "fours"
+  | "fives"
+  | "sixes"
+  | "three-dice"
+  | "four-dice"
+  | "full-house"
+  | "s-straight"
+  | "l-straight"
+  | "chance"
+  | "yahtzee";
+
+export type YamsCategories =
+  | "aces"
+  | "twos"
+  | "threes"
+  | "fours"
+  | "fives"
+  | "sixes"
+  | "plus"
+  | "minus"
+  | "four-dice"
+  | "full-house"
+  | "s-straight"
+  | "l-straight"
+  | "rigole"
+  | "yahtzee";
