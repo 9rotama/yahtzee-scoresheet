@@ -1,4 +1,3 @@
-import { scan } from "react-scan";
 import {
   Links,
   Meta,
@@ -7,7 +6,7 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
 } from "react-router";
-import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
+import { NuqsAdapter } from "nuqs/adapters/react-router/v8";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { ThemeProvider } from "./components/theme-provider";
@@ -31,8 +30,11 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Make sure to run react-scan only after hydration
-    scan({
-      enabled: true,
+    // 静的 import だと SSR 時に依存の react-grab が Node で JSON を import attribute なしで読み込みクラッシュするため、クライアントでのみ動的 import する
+    import("react-scan").then(({ scan }) => {
+      scan({
+        enabled: true,
+      });
     });
   }, []);
 
