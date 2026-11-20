@@ -83,26 +83,27 @@ export function YahtzeeSheet({
   const currentPlayerScores = scores[currentPlayerIdx];
   const setIsComplete = useContext(setIsCompleteContext);
 
+  // 判定を保存処理の中で行うと、/game を開き直したときに得点を選び直すまで判定されないため、scores から都度導出する
+  useEffect(() => {
+    setIsComplete(checkComplete(scores));
+  }, [scores, setIsComplete]);
+
+  // 保存する scores は引数で受け取る。mutationFn のクロージャの scores は setScores 直後だと更新前の値になりうる
   const { mutate } = useMutation({
-    mutationFn: async () => {
-      await updateCurrentScoresYahtzee(scores);
-      setIsComplete(checkComplete(scores));
-    },
+    mutationFn: updateCurrentScoresYahtzee,
   });
 
   const handleSelect = useCallback(
     (category: YahtzeeCategories, idx: number) => {
-      setScores((prev) => {
-        const newScores = [...prev];
-        newScores[currentPlayerIdx] = {
-          ...newScores[currentPlayerIdx],
-          [category]: idx,
-        };
-        return newScores;
-      });
-      mutate();
+      const newScores = [...scores];
+      newScores[currentPlayerIdx] = {
+        ...newScores[currentPlayerIdx],
+        [category]: idx,
+      };
+      setScores(newScores);
+      mutate(newScores);
     },
-    [currentPlayerIdx, mutate],
+    [scores, currentPlayerIdx, mutate],
   );
 
   const { smallTotal, bonus, total } = calcYahtzee(currentPlayerScores);
