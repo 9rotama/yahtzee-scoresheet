@@ -63,3 +63,22 @@ export async function addPreviousSheet(sheet: Omit<PreviousSheet, "date">) {
   await (await db).add("previousSheets", { ...sheet, date }, id);
   return id;
 }
+
+export type PreviousSheetWithId = PreviousSheet & { id: string };
+
+export async function listPreviousSheets(): Promise<PreviousSheetWithId[]> {
+  // キーは nanoid で時系列順ではないため、date インデックスを張る代わりに全件取得してから並べ替える（件数が少なく DB バージョンを上げるほどではない）
+  const sheets: PreviousSheetWithId[] = [];
+  let cursor = await (await db)
+    .transaction("previousSheets")
+    .store.openCursor();
+  while (cursor) {
+    sheets.push({ ...cursor.value, id: cursor.key });
+    cursor = await cursor.continue();
+  }
+  return sheets.sort((a, b) => b.date - a.date);
+}
+
+export async function deletePreviousSheet(id: string) {
+  await (await db).delete("previousSheets", id);
+}
