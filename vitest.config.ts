@@ -1,9 +1,10 @@
 import { defineConfig } from "vitest/config";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 // reactRouter() は vitest 上では動かないため vite.config.ts とは分ける
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   test: {
     setupFiles: ["fake-indexeddb/auto"],
   },
