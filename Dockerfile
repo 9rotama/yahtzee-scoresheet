@@ -1,22 +1,26 @@
-FROM node:26-alpine AS development-dependencies-env
+FROM node:26-alpine AS base
+# Node 25 以降は corepack が同梱されないため npm でグローバルに入れる
+RUN npm install -g pnpm@10.34.9
+
+FROM base AS development-dependencies-env
 COPY . /app
 WORKDIR /app
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
-FROM node:26-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
+FROM base AS production-dependencies-env
+COPY ./package.json pnpm-lock.yaml /app/
 WORKDIR /app
-RUN npm ci --omit=dev
+RUN pnpm install --frozen-lockfile --prod
 
-FROM node:26-alpine AS build-env
+FROM base AS build-env
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
-RUN npm run build
+RUN pnpm run build
 
-FROM node:26-alpine
-COPY ./package.json package-lock.json /app/
+FROM base
+COPY ./package.json pnpm-lock.yaml /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 WORKDIR /app
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
