@@ -1,3 +1,7 @@
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router";
+import { Button } from "~/components/ui/button";
+
 export function meta() {
   return [{ title: "クレジット | yathzee-scoresheet" }];
 }
@@ -80,6 +84,20 @@ export default function Credits() {
             </dd>
           </dl>
         </Section>
+      </div>
+
+      <div className="w-full mt-16">
+        {/* 戻り先はシート状態で変わるため、固定ルートではなく "/" の振り分けに任せる */}
+        <Button
+          variant="secondary"
+          className="w-full h-12 font-bold rounded-full"
+          asChild
+        >
+          <Link to="/">
+            <ArrowLeft />
+            ホームに戻る
+          </Link>
+        </Button>
       </div>
     </div>
   );
