@@ -1,9 +1,14 @@
 import { Menu } from "lucide-react";
-import { Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import { Header } from "~/components/header";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
-import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from "~/components/ui/drawer";
 import { Width } from "~/components/width";
 
 export default function IdleLayout() {
@@ -20,7 +25,12 @@ export default function IdleLayout() {
             <Width>
               <div className="flex flex-col gap-1 p-3">
                 <Button variant="ghost">プレー履歴</Button>
-                <Button variant="ghost">クレジット</Button>
+                {/* Drawer はレイアウトに常駐していて遷移では閉じないため、Link 単体ではなく DrawerClose で包む */}
+                <DrawerClose asChild>
+                  <Button variant="ghost" asChild>
+                    <Link to="/credits">クレジット</Link>
+                  </Button>
+                </DrawerClose>
               </div>
             </Width>
           </DrawerContent>
