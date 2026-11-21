@@ -1,17 +1,17 @@
+import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import img from "~/assets/rules.png";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import type { Rule } from "~/features/settings/models";
 import {
   getCurrentRule,
   updateCurrentRule,
 } from "~/features/settings/req/index.client";
 import type { Route } from "./+types/rules";
-import type { Rule } from "~/features/settings/models";
-import { useCallback, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 
 export async function clientLoader() {
   const data = await getCurrentRule();
@@ -33,13 +33,13 @@ export default function Rules({ loaderData }: Route.ComponentProps) {
     },
   });
 
-  const handleValueChange = useCallback((value: string) => {
+  const handleValueChange = (value: string) => {
     if (value === "yahtzee") {
       setRule({ name: "yahtzee" });
     } else if (value === "yams") {
       setRule({ name: "yams" });
     }
-  }, []);
+  };
 
   return (
     <div className="flex flex-col items-center">

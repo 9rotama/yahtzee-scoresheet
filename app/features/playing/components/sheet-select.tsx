@@ -1,3 +1,6 @@
+import { Check, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
 import {
   Drawer,
   DrawerContent,
@@ -6,21 +9,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
-import { Width } from "~/components/width";
-import { Button } from "~/components/ui/button";
-import { Check, ChevronDown } from "lucide-react";
-import { memo, useCallback, useState } from "react";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { Width } from "~/components/width";
 import { cn } from "~/lib/utils";
 
 type Props = {
-  name: string;
-  selectedIdx: number;
-  selections: (number | undefined)[];
-  onSelect: (idx: number) => void;
-};
-
-type MemoProps = {
   name: string;
   selectedIdx: number;
   selections: (number | undefined)[];
@@ -32,7 +25,7 @@ function SheetSelectContent({
   selectedIdx,
   selections,
   onSelect,
-}: MemoProps) {
+}: Props) {
   return (
     <DrawerContent>
       <Width>
@@ -69,8 +62,6 @@ function SheetSelectContent({
   );
 }
 
-const MemoSheetSelectContent = memo(SheetSelectContent);
-
 export function SheetSelect({
   name,
   selectedIdx,
@@ -79,13 +70,10 @@ export function SheetSelect({
 }: Props) {
   const [open, setOpen] = useState(false);
 
-  const handleSelect = useCallback(
-    (idx: number) => {
-      onSelect(idx);
-      setOpen(false);
-    },
-    [onSelect],
-  );
+  const handleSelect = (idx: number) => {
+    onSelect(idx);
+    setOpen(false);
+  };
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -104,7 +92,7 @@ export function SheetSelect({
           <ChevronDown className="absolute w-4 top-1/2 bottom-0 right-2 text-muted-foreground -translate-y-1/2" />
         </Button>
       </DrawerTrigger>
-      <MemoSheetSelectContent
+      <SheetSelectContent
         name={name}
         selectedIdx={selectedIdx}
         selections={selections}

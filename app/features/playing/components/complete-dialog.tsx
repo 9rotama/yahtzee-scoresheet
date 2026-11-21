@@ -1,5 +1,5 @@
 import { Check, CircleX } from "lucide-react";
-import { use, useCallback } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
   Drawer,
@@ -12,9 +12,8 @@ import {
   DrawerTrigger,
 } from "~/components/ui/drawer";
 import { Width } from "~/components/width";
-import { clearCurrentScores, getCurrentScores } from "../req/index.client";
-import { useNavigate } from "react-router";
 import { addPreviousSheet, getCurrentSheet } from "~/lib/db.client";
+import { clearCurrentScores, getCurrentScores } from "../req/index.client";
 
 type Content = {
   title: string;
@@ -25,18 +24,18 @@ type Content = {
 
 export function CompleteDialog({ isComplete }: { isComplete: boolean }) {
   const navigate = useNavigate();
-  const handleGameCancel = useCallback(async () => {
+  const handleGameCancel = async () => {
     await clearCurrentScores();
     navigate("/settings/players");
-  }, [navigate]);
+  };
 
-  const handleGameEnd = useCallback(async () => {
+  const handleGameEnd = async () => {
     const sheet = await getCurrentSheet();
 
     const id = await addPreviousSheet(sheet);
     await clearCurrentScores();
     navigate(`/results/${id}`);
-  }, [navigate]);
+  };
 
   const content: Content = {
     title: isComplete ? "ゲームを終了" : "ゲームを中断",
