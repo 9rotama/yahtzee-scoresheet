@@ -128,7 +128,7 @@ type Props = Pick<PreviousSheet, "players" | "rule" | "scores">;
 
 // 固定列の右の区切り線を border-l（隣のセル側）で引くと、横スクロールで固定列の下に隠れて消えるため、固定列自身に影で描く
 const stickyCell =
-  "sticky left-0 z-10 shadow-[inset_-1px_0_0_var(--color-border)]";
+  "sticky left-0 z-(--layer-sticky) shadow-[inset_-1px_0_0_var(--color-border)]";
 
 // bg-muted/30 は半透明で、固定列に使うと横スクロール時に下のセルが透ける。固定列だけ bg-muted にすると行の他のセルと色がずれるため、背景色と混ぜた不透明色を行と固定列の両方に使う
 const autoRowBg =

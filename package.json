@@ -10,7 +10,8 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "lint": "biome lint",
+    "lint": "biome lint && pnpm lint:layers",
+    "lint:layers": "node scripts/check-layers.mjs",
     "format": "biome format",
     "test": "vitest run"
   },
