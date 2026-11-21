@@ -1,19 +1,18 @@
-import { scan } from "react-scan";
+import { NuqsAdapter } from "nuqs/adapters/react-router/v8";
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
 } from "react-router";
-import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { ThemeProvider } from "./components/theme-provider";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./lib/query-client";
 import { useEffect } from "react";
+import { ThemeProvider } from "./components/theme-provider";
+import { queryClient } from "./lib/query-client";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -31,8 +30,11 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Make sure to run react-scan only after hydration
-    scan({
-      enabled: true,
+    // 静的 import だと SSR 時に依存の react-grab が Node で JSON を import attribute なしで読み込みクラッシュするため、クライアントでのみ動的 import する
+    import("react-scan").then(({ scan }) => {
+      scan({
+        enabled: true,
+      });
     });
   }, []);
 

@@ -24,12 +24,17 @@ export default function IdleLayout() {
           <DrawerContent>
             <Width>
               <div className="flex flex-col gap-1 p-3">
+                {/* Drawer はレイアウトに常駐していて遷移では閉じないため、Link 単体ではなく DrawerClose で包む */}
                 <DrawerClose asChild>
                   <Button variant="ghost" asChild>
                     <Link to="/histories">プレー履歴</Link>
                   </Button>
                 </DrawerClose>
-                <Button variant="ghost">クレジット</Button>
+                <DrawerClose asChild>
+                  <Button variant="ghost" asChild>
+                    <Link to="/credits">クレジット</Link>
+                  </Button>
+                </DrawerClose>
               </div>
             </Width>
           </DrawerContent>

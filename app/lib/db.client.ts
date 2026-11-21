@@ -1,4 +1,4 @@
-import { openDB, type DBSchema } from "idb";
+import { type DBSchema, openDB } from "idb";
 import { nanoid } from "nanoid";
 import type { CurrentSheet, PreviousSheet } from "~/models/sheet";
 
@@ -13,41 +13,40 @@ interface DB extends DBSchema {
   };
 }
 
+const defaultCurrentSheet = (): CurrentSheet => ({
+  players: [],
+  rule: { name: "yahtzee" },
+  scores: [],
+});
+
+// upgrade 内で `await db` すると upgrade 完了後の別トランザクションになり、
+// 直後の読み取りと競合するため、versionchange トランザクション上で初期値を入れる
 const db = openDB<DB>("yams-sheet", 1, {
-  upgrade(db) {
+  upgrade(db, _oldVersion, _newVersion, transaction) {
     db.createObjectStore("currentSheet");
-    initCurrentSheet();
     db.createObjectStore("previousSheets");
+    transaction
+      .objectStore("currentSheet")
+      .put(defaultCurrentSheet(), "single");
   },
 });
 
 export async function initCurrentSheet() {
-  const currentSheet = await (await db).get("currentSheet", "single");
-  if (currentSheet) {
-    await (await db).put(
-      "currentSheet",
-      { players: [], rule: { name: "yahtzee" }, scores: [] },
-      "single",
-    );
-  } else {
-    await (await db).add(
-      "currentSheet",
-      { players: [], rule: { name: "yahtzee" }, scores: [] },
-      "single",
-    );
-  }
+  await (await db).put("currentSheet", defaultCurrentSheet(), "single");
 }
 
 export async function getCurrentSheet() {
   const currentSheet = await (await db).get("currentSheet", "single");
-  if (!currentSheet) throw new Error("no current sheet found");
+  // DB は既存でもレコードだけ消えている場合があるため、例外にせず初期値で復旧する
+  if (!currentSheet) {
+    const sheet = defaultCurrentSheet();
+    await (await db).put("currentSheet", sheet, "single");
+    return sheet;
+  }
   return currentSheet;
 }
 
 export async function updateCurrentSheet(sheet: CurrentSheet) {
-  const currentSheet = await (await db).get("currentSheet", "single");
-  if (!currentSheet) throw new Error("no current sheet found");
-
   await (await db).put("currentSheet", sheet, "single");
 }
 
