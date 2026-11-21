@@ -1,4 +1,8 @@
 import {
+  type ScoreItemKey,
+  ScoreItemLabel,
+} from "~/components/score-item-label";
+import {
   Table,
   TableBody,
   TableCell,
@@ -23,6 +27,7 @@ import type { PreviousSheet } from "~/models/sheet";
 
 type Cell = number | undefined;
 type Row = {
+  item: ScoreItemKey;
   label: string;
   variant: "default" | "auto" | "total";
   values: Cell[];
@@ -43,6 +48,7 @@ function toColumns<S extends { playerId: string }>(
 function buildYahtzeeGroups(columns: Column<ScoresYahtzee>[]): Group[] {
   const calcs = columns.map((c) => calcYahtzee(c.scores));
   const category = (c: YahtzeeCategories): Row => ({
+    item: c,
     label: yahtzeeItems[c].name,
     variant: "default",
     values: columns.map((col) => yahtzeeItems[c].selections[col.scores[c]]),
@@ -53,11 +59,17 @@ function buildYahtzeeGroups(columns: Column<ScoresYahtzee>[]): Group[] {
         category,
       ),
       {
+        item: "subtotal",
         label: "小計",
         variant: "auto",
         values: calcs.map((r) => r.smallTotal),
       },
-      { label: "ボーナス", variant: "auto", values: calcs.map((r) => r.bonus) },
+      {
+        item: "bonus",
+        label: "ボーナス",
+        variant: "auto",
+        values: calcs.map((r) => r.bonus),
+      },
     ],
     [category("chance")],
     (
@@ -72,6 +84,7 @@ function buildYahtzeeGroups(columns: Column<ScoresYahtzee>[]): Group[] {
     ).map(category),
     [
       {
+        item: "total",
         label: "総合得点",
         variant: "total",
         values: calcs.map((r) => r.total),
@@ -83,6 +96,7 @@ function buildYahtzeeGroups(columns: Column<ScoresYahtzee>[]): Group[] {
 function buildYamsGroups(columns: Column<ScoresYams>[]): Group[] {
   const calcs = columns.map((c) => calcYams(c.scores));
   const category = (c: YamsCategories): Row => ({
+    item: c,
     label: yamsItems[c].name,
     variant: "default",
     values: columns.map((col) => yamsItems[c].selections[col.scores[c]]),
@@ -93,16 +107,27 @@ function buildYamsGroups(columns: Column<ScoresYams>[]): Group[] {
         category,
       ),
       {
+        item: "subtotal",
         label: "小計",
         variant: "auto",
         values: calcs.map((r) => r.smallTotal),
       },
-      { label: "ボーナス", variant: "auto", values: calcs.map((r) => r.bonus) },
+      {
+        item: "bonus",
+        label: "ボーナス",
+        variant: "auto",
+        values: calcs.map((r) => r.bonus),
+      },
     ],
     [
       category("plus"),
       category("minus"),
-      { label: "デルタ", variant: "auto", values: calcs.map((r) => r.delta) },
+      {
+        item: "delta",
+        label: "デルタ",
+        variant: "auto",
+        values: calcs.map((r) => r.delta),
+      },
     ],
     (
       [
@@ -116,6 +141,7 @@ function buildYamsGroups(columns: Column<ScoresYams>[]): Group[] {
     ).map(category),
     [
       {
+        item: "total",
         label: "総合得点",
         variant: "total",
         values: calcs.map((r) => r.total),
@@ -158,7 +184,7 @@ export function ScoreTable({ players, rule, scores }: Props) {
           <TableRow className="hover:bg-transparent">
             <TableHead
               scope="col"
-              className={cn(stickyCell, "bg-background min-w-28 px-3")}
+              className={cn(stickyCell, "bg-background w-30 min-w-30 px-2")}
             >
               役
             </TableHead>
@@ -182,7 +208,7 @@ export function ScoreTable({ players, rule, scores }: Props) {
               const isAuto = row.variant !== "default";
               return (
                 <TableRow
-                  key={row.label}
+                  key={row.item}
                   className={cn(
                     "h-9",
                     groupIdx > 0 && rowIdx === 0 && "border-t-4 border-t-muted",
@@ -194,11 +220,11 @@ export function ScoreTable({ players, rule, scores }: Props) {
                     className={cn(
                       stickyCell,
                       isAuto ? autoRowBg : "bg-background",
-                      "h-auto px-3",
+                      "h-auto px-2 py-1 leading-tight",
                       row.variant === "total" ? "font-bold" : "font-normal",
                     )}
                   >
-                    {row.label}
+                    <ScoreItemLabel item={row.item} name={row.label} compact />
                   </TableHead>
                   {row.values.map((value, i) => (
                     <TableCell

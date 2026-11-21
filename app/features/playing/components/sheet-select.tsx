@@ -69,6 +69,7 @@ export function SheetSelect({
   onSelect,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const score = selections[selectedIdx];
 
   const handleSelect = (idx: number) => {
     onSelect(idx);
@@ -81,15 +82,21 @@ export function SheetSelect({
         <Button
           className="block w-full h-10 cursor-pointer relative rounded-none"
           variant="ghost"
+          aria-label={
+            score === undefined ? `${name}、未入力` : `${name}、${score}点`
+          }
         >
-          <p>
-            {selectedIdx ? (
-              <p>{selections[selectedIdx]}</p>
-            ) : (
-              <p className="text-muted-foreground">-</p>
-            )}
-          </p>
-          <ChevronDown className="absolute w-4 top-1/2 bottom-0 right-2 text-muted-foreground -translate-y-1/2" />
+          <span
+            className={
+              score === undefined ? "text-muted-foreground" : undefined
+            }
+          >
+            {score ?? "-"}
+          </span>
+          <ChevronDown
+            aria-hidden="true"
+            className="absolute w-4 top-1/2 bottom-0 right-2 text-muted-foreground -translate-y-1/2"
+          />
         </Button>
       </DrawerTrigger>
       <SheetSelectContent

@@ -7,12 +7,7 @@ import { updateCurrentScoresYahtzee } from "../req/index.client";
 import { calcYahtzee } from "../utils/calc";
 import type { YahtzeeCategories } from "../utils/categories";
 import { checkComplete } from "../utils/check-complete";
-import {
-  type Index,
-  minBonusYahtzee,
-  type ScoresYahtzee,
-  scoreSelectionsYahtzee,
-} from "../utils/score-selects";
+import type { Index, ScoresYahtzee } from "../utils/score-selects";
 import { yahtzeeItems as items } from "../utils/yahtzee-items";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
@@ -105,7 +100,8 @@ export function YahtzeeSheet({
             {firstGroup.map((c) => (
               <SheetRow
                 key={c}
-                name={<p>{items[c].name}</p>}
+                item={c}
+                name={items[c].name}
                 score={
                   <SheetSelect
                     name={items[c].name}
@@ -118,10 +114,16 @@ export function YahtzeeSheet({
             ))}
             <SheetRow
               variant="auto"
-              name={<p>小計</p>}
+              item="subtotal"
+              name="小計"
               score={<p>{smallTotal}</p>}
             />
-            <SheetRow variant="auto" name={<p>ボーナス</p>} score={bonus} />
+            <SheetRow
+              variant="auto"
+              item="bonus"
+              name="ボーナス"
+              score={bonus}
+            />
           </TableBody>
         </Table>
       </div>
@@ -131,7 +133,8 @@ export function YahtzeeSheet({
             {secondGroup.map((c) => (
               <SheetRow
                 key={c}
-                name={<p>{items[c].name}</p>}
+                item={c}
+                name={items[c].name}
                 score={
                   <SheetSelect
                     name={items[c].name}
@@ -151,7 +154,8 @@ export function YahtzeeSheet({
             {thirdGroup.map((c) => (
               <SheetRow
                 key={c}
-                name={<p>{items[c].name}</p>}
+                item={c}
+                name={items[c].name}
                 score={
                   <SheetSelect
                     name={items[c].name}
@@ -170,7 +174,8 @@ export function YahtzeeSheet({
           <TableBody>
             <SheetRow
               variant="auto"
-              name={<p>総合得点</p>}
+              item="total"
+              name="総合得点"
               score={<p>{total}</p>}
             />
           </TableBody>
