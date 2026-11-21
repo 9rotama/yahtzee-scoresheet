@@ -1,5 +1,10 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
+  "plugins": [
+    { "path": "./scripts/layer-rules.js", "includes": ["app/**"] },
+    { "path": "./scripts/layer-css.grit", "includes": ["app/**"] },
+    { "path": "./scripts/layer-apply.grit", "includes": ["app/**"] }
+  ],
   "vcs": {
     "enabled": true,
     "clientKind": "git",
