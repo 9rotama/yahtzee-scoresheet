@@ -1,87 +1,74 @@
-# Welcome to React Router!
+# yahtzee-scoresheet
 
-A modern, production-ready template for building full-stack React applications using React Router.
+ダイスゲームの得点表をスマートフォンのブラウザで付けるための Web アプリです。
+ヤッツィーと、その派生ルールであるヤムスに対応しています。
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+https://yahtzee-scoresheet-five.vercel.app
 
-## Features
+| プレイヤー追加 | ルール選択 | 得点入力 |
+| --- | --- | --- |
+| <img src="docs/screenshots/players.png" alt="プレイヤー追加画面" width="240"> | <img src="docs/screenshots/rules.png" alt="ルール選択画面" width="240"> | <img src="docs/screenshots/game.png" alt="ヤムスの得点入力画面" width="240"> |
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## 機能
 
-## Getting Started
+- ルールはヤッツィーとヤムスから選べます。ヤムスではプラスとマイナスの差（デルタ）やリゴールといった独自の役を記録できます。
+- 得点の入力は役ごとに取りうる点数の一覧から選ぶだけです。小計、ボーナス、総合得点は自動で計算されます。
+- プレイヤーは最大 8 人まで登録できます。得点表の上部の矢印でプレイヤーを切り替えられるので、1 台の端末を回して使えます。
+- 入力した得点は端末内に保存されます。ページを再読み込みしたりタブを閉じたりしても、途中から再開できます。
+- 右上のボタンで、ライトモード、ダークモード、システム設定に合わせる表示を切り替えられます。
 
-### Installation
+## 使い方
 
-Install the dependencies:
+1. プレイヤーを追加し、名前を付けます。
+2. ルールを選び、ゲームを始めます。
+3. 各プレイヤーの役ごとに得点を選びます。
+4. すべての欄が埋まると、左上のボタンが「ゲームを中断」から「ゲームを終了」に変わります。終了すると、順位とスコアの結果発表が表示されます。
 
-```bash
-npm install
+途中で「ゲームを中断」を選ぶと、入力中の得点を破棄してプレイヤー追加の画面に戻ります。
+
+## データの保存について
+
+得点とプレイヤーの情報はブラウザの IndexedDB に保存します。
+サーバには送信しません。
+そのため、別の端末やブラウザとは記録を共有できません。
+また、ブラウザのサイトデータを削除すると記録も消えます。
+
+終了したゲームの結果も保存しますが、過去の結果を一覧する画面はまだありません。
+
+## 開発
+
+### 必要なもの
+
+- Node.js 26.x
+- pnpm 10
+- lefthook（pre-commit フックを使う場合）
+
+### セットアップと起動
+
+```sh
+pnpm install
+pnpm dev
 ```
 
-### Development
+開発サーバは http://localhost:5173 で起動します。
 
-Start the development server with HMR:
+pre-commit フックを有効にするには、lefthook を別途インストールしてから次を実行します。
+コミット時に、ステージしたファイルへ `biome check --write` がかかります。
 
-```bash
-npm run dev
+```sh
+lefthook install
 ```
 
-Your application will be available at `http://localhost:5173`.
+### コマンド
 
-## Building for Production
+| コマンド | 内容 |
+| --- | --- |
+| `pnpm dev` | 開発サーバを起動する |
+| `pnpm build` | 本番用にビルドする（出力先は `build/`） |
+| `pnpm start` | ビルド結果をサーバで起動する（既定のポートは 3000 で、`PORT` で変更できる） |
+| `pnpm test` | Vitest でテストを実行する |
+| `pnpm typecheck` | ルートの型を生成してから型検査する |
+| `pnpm lint` | Biome で lint する |
+| `pnpm format` | Biome でフォーマットを確認する |
 
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+GitHub Actions ではプルリクエストと `main` への push のたびに `pnpm test` を実行します。
