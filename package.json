@@ -6,8 +6,8 @@
     "node": "26.x"
   },
   "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
+    "build": "node --env-file-if-exists=.env.local scripts/fetch-illustrations.mjs && react-router build",
+    "dev": "node --env-file-if-exists=.env.local scripts/fetch-illustrations.mjs && react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "lint": "biome lint",
@@ -49,6 +49,7 @@
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vercel/blob": "^2.9.0",
     "babel-plugin-react-compiler": "1.0.0",
     "fake-indexeddb": "^6.2.8",
     "tailwindcss": "^4.3.5",
