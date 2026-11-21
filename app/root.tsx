@@ -27,15 +27,20 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+// 静的 import だと SSR 時に依存の react-grab が Node で JSON を import attribute なしで読み込みクラッシュするため、クライアントでのみ動的 import する
+// コンポーネント内に import() を直接書かない: React Compiler が import() 式を未サポートで Layout ごと最適化をスキップするため
+function startReactScan() {
+  import("react-scan").then(({ scan }) => {
+    scan({
+      enabled: true,
+    });
+  });
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Make sure to run react-scan only after hydration
-    // 静的 import だと SSR 時に依存の react-grab が Node で JSON を import attribute なしで読み込みクラッシュするため、クライアントでのみ動的 import する
-    import("react-scan").then(({ scan }) => {
-      scan({
-        enabled: true,
-      });
-    });
+    startReactScan();
   }, []);
 
   return (

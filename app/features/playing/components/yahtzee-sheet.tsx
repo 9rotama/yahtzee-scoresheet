@@ -1,29 +1,21 @@
+import { useMutation } from "@tanstack/react-query";
+import { useContext, useEffect, useState } from "react";
 import { Table, TableBody } from "~/components/ui/table";
+import type { Player } from "~/features/settings/models";
+import { setIsCompleteContext } from "~/routes/(playing)/layout";
+import { updateCurrentScoresYahtzee } from "../req/index.client";
+import { calcYahtzee } from "../utils/calc";
+import type { YahtzeeCategories } from "../utils/categories";
+import { checkComplete } from "../utils/check-complete";
+import {
+  type Index,
+  minBonusYahtzee,
+  type ScoresYahtzee,
+  scoreSelectionsYahtzee,
+} from "../utils/score-selects";
+import { yahtzeeItems as items } from "../utils/yahtzee-items";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
-import {
-  memo,
-  use,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  minBonusYahtzee,
-  scoreSelectionsYahtzee,
-  type Index,
-  type ScoresYahtzee,
-} from "../utils/score-selects";
-import type { Player } from "~/features/settings/models";
-import { useMutation } from "@tanstack/react-query";
-import { updateCurrentScoresYahtzee } from "../req/index.client";
-import type { YahtzeeCategories } from "../utils/categories";
-import { setIsCompleteContext } from "~/routes/(playing)/layout";
-import { checkComplete } from "../utils/check-complete";
-import { yahtzeeItems as items } from "../utils/yahtzee-items";
-import { calcYahtzee } from "../utils/calc";
 
 function getInitScoreSelections(playerId: string): ScoresYahtzee {
   return {
@@ -93,18 +85,15 @@ export function YahtzeeSheet({
     mutationFn: updateCurrentScoresYahtzee,
   });
 
-  const handleSelect = useCallback(
-    (category: YahtzeeCategories, idx: number) => {
-      const newScores = [...scores];
-      newScores[currentPlayerIdx] = {
-        ...newScores[currentPlayerIdx],
-        [category]: idx,
-      };
-      setScores(newScores);
-      mutate(newScores);
-    },
-    [scores, currentPlayerIdx, mutate],
-  );
+  const handleSelect = (category: YahtzeeCategories, idx: number) => {
+    const newScores = [...scores];
+    newScores[currentPlayerIdx] = {
+      ...newScores[currentPlayerIdx],
+      [category]: idx,
+    };
+    setScores(newScores);
+    mutate(newScores);
+  };
 
   const { smallTotal, bonus, total } = calcYahtzee(currentPlayerScores);
 

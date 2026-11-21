@@ -1,21 +1,21 @@
+import { useMutation } from "@tanstack/react-query";
+import { useContext, useEffect, useState } from "react";
 import { Table, TableBody } from "~/components/ui/table";
+import type { Player } from "~/features/settings/models";
+import { setIsCompleteContext } from "~/routes/(playing)/layout";
+import { updateCurrentScoresYams } from "../req/index.client";
+import { calcYams } from "../utils/calc";
+import type { YamsCategories } from "../utils/categories";
+import { checkComplete } from "../utils/check-complete";
+import {
+  type Index,
+  minBonusYams,
+  type ScoresYams,
+  scoreSelectionsYams,
+} from "../utils/score-selects";
+import { yamsItems as items } from "../utils/yams-items";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
-import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  minBonusYams,
-  scoreSelectionsYams,
-  type Index,
-  type ScoresYams,
-} from "../utils/score-selects";
-import type { Player } from "~/features/settings/models";
-import { useMutation } from "@tanstack/react-query";
-import { updateCurrentScoresYams } from "../req/index.client";
-import type { YamsCategories } from "../utils/categories";
-import { setIsCompleteContext } from "~/routes/(playing)/layout";
-import { checkComplete } from "../utils/check-complete";
-import { yamsItems as items } from "../utils/yams-items";
-import { calcYams } from "../utils/calc";
 
 function getInitScoreSelections(playerId: string): ScoresYams {
   return {
@@ -82,18 +82,15 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
     setIsComplete(checkComplete(scores));
   }, [scores, setIsComplete]);
 
-  const handleSelect = useCallback(
-    (category: YamsCategories, idx: number) => {
-      const newScores = [...scores];
-      newScores[currentPlayerIdx] = {
-        ...newScores[currentPlayerIdx],
-        [category]: idx,
-      };
-      setScores(newScores);
-      mutate(newScores);
-    },
-    [scores, currentPlayerIdx, mutate],
-  );
+  const handleSelect = (category: YamsCategories, idx: number) => {
+    const newScores = [...scores];
+    newScores[currentPlayerIdx] = {
+      ...newScores[currentPlayerIdx],
+      [category]: idx,
+    };
+    setScores(newScores);
+    mutate(newScores);
+  };
 
   const { smallTotal, bonus, delta, total } = calcYams(currentPlayerScores);
 
