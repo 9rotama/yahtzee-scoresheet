@@ -41,7 +41,11 @@ export function RankingTable({ results }: { results: RankedResult[] }) {
             <TableCell>
               <Rank rank={result.rank} />
             </TableCell>
-            <TableCell>{result.playerName}</TableCell>
+            <TableCell title={result.playerName}>
+              <span className="block max-w-36 truncate">
+                {result.playerName}
+              </span>
+            </TableCell>
             <TableCell className="text-right">
               <span className="font-bold text-xl">{result.score}</span> 点
             </TableCell>

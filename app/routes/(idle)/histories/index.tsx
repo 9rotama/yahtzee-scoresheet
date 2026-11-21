@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import img from "~/assets/empty.png";
 import { Button } from "~/components/ui/button";
@@ -15,6 +15,10 @@ export async function clientLoader() {
     rule: sheet.rule,
     ranking: rankPlayers(sheet),
   }));
+}
+
+export function meta() {
+  return [{ title: "プレー履歴 | yathzee-scoresheet" }];
 }
 
 export function HydrateFallback() {
@@ -39,12 +43,13 @@ export default function Histories({ loaderData }: Route.ComponentProps) {
         <p className="text-xs text-muted-foreground mt-1">
           ゲームを終了すると、ここに結果が保存されます
         </p>
+        {/* プレー中でも履歴が0件のことはあるため、設定画面に固定せず "/" の振り分けに任せる */}
         <Button
           variant="default"
           className="mt-16 w-full h-12 font-bold rounded-full"
           asChild
         >
-          <Link to="/settings/players">
+          <Link to="/">
             ゲームをはじめる
             <ArrowRight />
           </Link>
@@ -63,6 +68,19 @@ export default function Histories({ loaderData }: Route.ComponentProps) {
         {loaderData.map((history) => (
           <HistoryListItem key={history.id} {...history} />
         ))}
+      </div>
+      <div className="w-full mt-16">
+        {/* 戻り先はシート状態で変わるため、固定ルートではなく "/" の振り分けに任せる */}
+        <Button
+          variant="secondary"
+          className="w-full h-12 font-bold rounded-full"
+          asChild
+        >
+          <Link to="/">
+            <ArrowLeft />
+            ホームに戻る
+          </Link>
+        </Button>
       </div>
     </div>
   );

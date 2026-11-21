@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, redirect, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { DeleteHistoryDialog } from "~/features/history/components/delete-history-dialog";
 import { formatPlayedAt } from "~/features/history/utils/format-date";
@@ -13,7 +13,13 @@ import type { Route } from "./+types/detail";
 
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const sheet = await getPreviousSheet(params.id);
+  // 削除後のブラウザバックやブックマークで普通に到達するため、エラー画面ではなく一覧へ戻す
+  if (!sheet) throw redirect("/histories");
   return { id: params.id, sheet, ranking: rankPlayers(sheet) };
+}
+
+export function meta() {
+  return [{ title: "プレー履歴 | yathzee-scoresheet" }];
 }
 
 export function HydrateFallback() {

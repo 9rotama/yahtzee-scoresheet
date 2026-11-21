@@ -13,12 +13,14 @@ type Props = {
 };
 
 export function HistoryListItem({ id, date, rule, ranking }: Props) {
-  const [winner, ...others] = ranking;
+  // 同点1位は全員を王冠の行に出す。先頭だけを1位扱いにすると、同点の人が「その他」に紛れる
+  const winners = ranking.filter((r) => r.rank === 1);
+  const others = ranking.filter((r) => r.rank !== 1);
 
   return (
     <Link
       to={`/histories/${id}`}
-      className="block border rounded-md py-3 px-3 transition-colors hover:bg-muted/50"
+      className="block border rounded-md p-3 transition-colors hover:bg-muted/50 active:bg-muted/50"
     >
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">
@@ -28,7 +30,7 @@ export function HistoryListItem({ id, date, rule, ranking }: Props) {
           {ruleLabels[rule.name]}
         </span>
       </div>
-      {winner && (
+      {winners.length > 0 && (
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-2 min-w-0">
             <Crown
@@ -36,11 +38,11 @@ export function HistoryListItem({ id, date, rule, ranking }: Props) {
               className="size-5 shrink-0 text-yellow-500 fill-yellow-500"
             />
             <span className="text-sm font-bold truncate">
-              {winner.playerName}
+              {winners.map((r) => r.playerName).join("・")}
             </span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            <span className="font-bold text-xl">{winner.score}</span>
+            <span className="font-bold text-xl">{winners[0].score}</span>
             <span className="text-sm">点</span>
             <ChevronRight className="size-4 text-muted-foreground ml-1" />
           </div>
