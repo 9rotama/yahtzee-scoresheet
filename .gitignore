@@ -4,3 +4,7 @@
 # React Router
 /.react-router/
 /build/
+/app/assets/*.png
+.env*
+!.env.example
+.vercel

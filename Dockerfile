@@ -16,7 +16,7 @@ FROM base AS build-env
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
-RUN pnpm run build
+RUN --mount=type=secret,id=blob_token,required=true BLOB_READ_WRITE_TOKEN="$(cat /run/secrets/blob_token)" pnpm run build
 
 FROM base
 COPY ./package.json pnpm-lock.yaml /app/

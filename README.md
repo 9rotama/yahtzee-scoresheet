@@ -52,12 +52,28 @@ https://yahtzee-scoresheet-five.vercel.app
 
 ### セットアップと起動
 
+画像の取得には、プロジェクトに接続された Vercel Blob のトークンが必要です。
+Vercel CLI でプロジェクトをリンクし、環境変数を取得してください。
+
+```sh
+vercel link
+vercel env pull .env.local
+```
+
+取得済みの画像が `app/assets/` にある場合は、トークンがなくても起動できます。
+
 ```sh
 pnpm install
 pnpm dev
 ```
 
 開発サーバは http://localhost:5173 で起動します。
+
+Docker イメージをビルドする場合は、`BLOB_READ_WRITE_TOKEN` を環境変数に設定し、BuildKit の secret として渡します。
+
+```sh
+docker build --secret id=blob_token,env=BLOB_READ_WRITE_TOKEN .
+```
 
 pre-commit フックを有効にするには、lefthook を別途インストールしてから次を実行します。
 コミット時に、ステージしたファイルへ `biome check --write` がかかります。
