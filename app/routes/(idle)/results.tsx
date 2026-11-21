@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
 import img from "~/assets/goal.png";
 import { Button } from "~/components/ui/button";
 import { RankingTable } from "~/features/results/components/ranking-table";
@@ -11,7 +11,13 @@ import type { Route } from "./+types/results";
 
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const sheet = await getPreviousSheet(params.id);
+  // 削除後のブラウザバックやブックマークで普通に到達するため、エラー画面ではなく一覧へ戻す
+  if (!sheet) throw redirect("/histories");
   return { sheet, ranking: rankPlayers(sheet) };
+}
+
+export function meta() {
+  return [{ title: "結果発表 | yathzee-scoresheet" }];
 }
 
 export function HydrateFallback() {

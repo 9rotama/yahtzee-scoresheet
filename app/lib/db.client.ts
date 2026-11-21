@@ -51,9 +51,7 @@ export async function updateCurrentSheet(sheet: CurrentSheet) {
 }
 
 export async function getPreviousSheet(id: string) {
-  const sheet = await (await db).get("previousSheets", id);
-  if (!sheet) throw new Error("no previous sheet found");
-  return sheet;
+  return (await db).get("previousSheets", id);
 }
 export async function addPreviousSheet(sheet: Omit<PreviousSheet, "date">) {
   const id = nanoid();
