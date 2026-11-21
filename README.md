@@ -75,10 +75,9 @@ lefthook install
 | `pnpm start` | ビルド結果をサーバで起動する（既定のポートは 3000 で、`PORT` で変更できる） |
 | `pnpm test` | Vitest でテストを実行する |
 | `pnpm typecheck` | ルートの型を生成してから型検査する |
-| `pnpm lint` | Biome と重なり順のトークンを検査する |
-| `pnpm lint:layers` | 重なり順の直接指定を検査する |
+| `pnpm lint` | Biome で lint する（重なり順の直接指定も検査する） |
 | `pnpm format` | Biome でフォーマットを確認する |
 
 重なり順は `app/app.css` の `--layer-*` トークンで管理し、Tailwind では `z-(--layer-header)` のように指定します。
 
-GitHub Actions ではプルリクエストと `main` への push のたびに `pnpm test` と `pnpm lint:layers` を実行します。
+GitHub Actions ではプルリクエストと `main` への push のたびに `pnpm test` と `pnpm lint` を実行します。

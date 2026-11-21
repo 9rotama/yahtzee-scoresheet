@@ -1,0 +1,7 @@
+language css;
+CssIdentifier() as $class where {
+    $class <: within (CssAtRule() as $rule where { $rule <: r"(?s)\s*@apply\s+.*" }),
+    $class <: r"\s*(?:[^\s:]+:)*(?:!?-?z-.*|\[z-index:.*)",
+    not $class <: r"\s*(?:[^\s:]+:)*z-\(--layer-[\w-]+\)\s*",
+    register_diagnostic(span = $class, message = "重なり順には --layer-* トークンを使用してください。")
+}

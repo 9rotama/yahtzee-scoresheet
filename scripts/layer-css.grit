@@ -1,0 +1,6 @@
+language css;
+CssGenericProperty() as $property where {
+    $property <: r"(?is)\s*z-index\s*:.*",
+    not $property <: r"(?is)\s*z-index\s*:\s*var\(\s*--layer-[\w-]+\s*\)\s*",
+    register_diagnostic(span = $property, message = "重なり順には --layer-* トークンを使用してください。")
+}
