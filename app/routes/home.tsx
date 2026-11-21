@@ -1,7 +1,7 @@
+import { use, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { getCurrentScores } from "~/features/playing/req/index.client";
 import type { Route } from "./+types/home";
-import { use, useEffect } from "react";
 
 export function meta() {
   return [{ title: "yathzee-scoresheet" }];
@@ -16,10 +16,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // push だと履歴に "/" が残り、ブラウザバックで "/" に戻るたび再リダイレクトされて戻れなくなる
     if (loaderData.scores.length === 0) {
-      navigate("/settings/players");
+      navigate("/settings/players", { replace: true });
     } else {
-      navigate("/game");
+      navigate("/game", { replace: true });
     }
   }, [loaderData.scores, navigate]);
 }
