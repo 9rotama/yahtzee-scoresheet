@@ -7,12 +7,7 @@ import { updateCurrentScoresYams } from "../req/index.client";
 import { calcYams } from "../utils/calc";
 import type { YamsCategories } from "../utils/categories";
 import { checkComplete } from "../utils/check-complete";
-import {
-  type Index,
-  minBonusYams,
-  type ScoresYams,
-  scoreSelectionsYams,
-} from "../utils/score-selects";
+import type { Index, ScoresYams } from "../utils/score-selects";
 import { yamsItems as items } from "../utils/yams-items";
 import { SheetRow } from "./sheet-row";
 import { SheetSelect } from "./sheet-select";
@@ -102,7 +97,8 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
             {firstGroup.map((c) => (
               <SheetRow
                 key={c}
-                name={<p>{items[c].name}</p>}
+                item={c}
+                name={items[c].name}
                 score={
                   <SheetSelect
                     name={items[c].name}
@@ -115,10 +111,16 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
             ))}
             <SheetRow
               variant="auto"
-              name={<p>小計</p>}
+              item="subtotal"
+              name="小計"
               score={<p>{smallTotal}</p>}
             />
-            <SheetRow variant="auto" name={<p>ボーナス</p>} score={bonus} />
+            <SheetRow
+              variant="auto"
+              item="bonus"
+              name="ボーナス"
+              score={bonus}
+            />
           </TableBody>
         </Table>
       </div>
@@ -128,7 +130,8 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
             {secondGroup.map((c) => (
               <SheetRow
                 key={c}
-                name={<p>{items[c].name}</p>}
+                item={c}
+                name={items[c].name}
                 score={
                   <SheetSelect
                     name={items[c].name}
@@ -141,7 +144,8 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
             ))}
             <SheetRow
               variant="auto"
-              name={<p>デルタ</p>}
+              item="delta"
+              name="デルタ"
               score={<p>{delta !== undefined ? delta : "-"}</p>}
             />
           </TableBody>
@@ -153,7 +157,8 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
             {thirdGroup.map((c) => (
               <SheetRow
                 key={c}
-                name={<p>{items[c].name}</p>}
+                item={c}
+                name={items[c].name}
                 score={
                   <SheetSelect
                     name={items[c].name}
@@ -172,7 +177,8 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
           <TableBody>
             <SheetRow
               variant="auto"
-              name={<p>総合得点</p>}
+              item="total"
+              name="総合得点"
               score={<p>{total}</p>}
             />
           </TableBody>
