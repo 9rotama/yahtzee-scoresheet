@@ -1,4 +1,5 @@
 import { Edit2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Drawer,
@@ -9,10 +10,9 @@ import {
   DrawerTrigger,
 } from "~/components/ui/drawer";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { Width } from "~/components/width";
 import type { Player } from "../models";
-import { useCallback, useMemo, useState } from "react";
-import { Label } from "~/components/ui/label";
 
 type Props = {
   player: Player;
@@ -25,14 +25,12 @@ export function PlayerEdit({ player, onSubmit }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(player.name);
 
-  const disabled = useMemo(() => {
-    return name === player.name || name.length === 0;
-  }, [name, player.name]);
+  const disabled = name === player.name || name.length === 0;
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     onSubmit({ id: player.id, name });
     setOpen(false);
-  }, [name, onSubmit, player.id]);
+  };
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>

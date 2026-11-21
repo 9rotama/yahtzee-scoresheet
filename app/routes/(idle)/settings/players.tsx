@@ -1,17 +1,17 @@
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
+import { nanoid } from "nanoid";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import img from "~/assets/players.png";
 import { Button } from "~/components/ui/button";
 import { PlayerList } from "~/features/settings/components/player-list";
+import type { Player } from "~/features/settings/models";
 import {
   getCurrentPlayers,
   updateCurrentPlayers,
 } from "~/features/settings/req/index.client";
 import type { Route } from "./+types/players";
-import { nanoid } from "nanoid";
-import { useCallback, useState } from "react";
-import type { Player } from "~/features/settings/models";
-import { useMutation } from "@tanstack/react-query";
 
 export async function clientLoader() {
   const data = await getCurrentPlayers();
@@ -33,21 +33,21 @@ export default function Players({ loaderData }: Route.ComponentProps) {
     },
   });
 
-  const handleAddPlayer = useCallback(() => {
+  const handleAddPlayer = () => {
     const newPlayer: Player = {
       id: nanoid(),
       name: `プレイヤー ${players.length + 1}`,
     };
     setPlayers((prev) => [...prev, newPlayer]);
-  }, [players.length]);
+  };
 
-  const handleDeletePlayer = useCallback((id: string) => {
+  const handleDeletePlayer = (id: string) => {
     setPlayers((prev) => prev.filter((player) => player.id !== id));
-  }, []);
+  };
 
-  const handleEditPlayer = useCallback((data: Player) => {
+  const handleEditPlayer = (data: Player) => {
     setPlayers((prev) => prev.map((p) => (p.id === data.id ? data : p)));
-  }, []);
+  };
 
   return (
     <div className="flex flex-col items-center">
