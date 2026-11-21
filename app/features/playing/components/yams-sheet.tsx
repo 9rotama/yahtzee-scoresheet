@@ -72,11 +72,9 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
 
   const currentPlayerScores = scores[currentPlayerIdx];
 
+  // 保存する scores は引数で受け取る。mutationFn のクロージャの scores は setScores 直後だと更新前の値になりうる
   const { mutate } = useMutation({
-    mutationFn: async () => {
-      await updateCurrentScoresYams(scores);
-      setIsComplete(checkComplete(scores));
-    },
+    mutationFn: updateCurrentScoresYams,
   });
   const setIsComplete = useContext(setIsCompleteContext);
 
@@ -85,15 +83,13 @@ export function YamsSheet({ players, currentPlayerIdx, initialScores }: Props) {
   }, [scores, setIsComplete]);
 
   const handleSelect = (category: YamsCategories, idx: number) => {
-    setScores((prev) => {
-      const newScores = [...prev];
-      newScores[currentPlayerIdx] = {
-        ...newScores[currentPlayerIdx],
-        [category]: idx,
-      };
-      return newScores;
-    });
-    mutate();
+    const newScores = [...scores];
+    newScores[currentPlayerIdx] = {
+      ...newScores[currentPlayerIdx],
+      [category]: idx,
+    };
+    setScores(newScores);
+    mutate(newScores);
   };
 
   const { smallTotal, bonus, delta, total } = calcYams(currentPlayerScores);

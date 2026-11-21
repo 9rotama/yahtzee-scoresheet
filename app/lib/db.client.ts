@@ -1,4 +1,4 @@
-import { openDB, type DBSchema } from "idb";
+import { type DBSchema, openDB } from "idb";
 import { nanoid } from "nanoid";
 import type { CurrentSheet, PreviousSheet } from "~/models/sheet";
 
@@ -51,9 +51,7 @@ export async function updateCurrentSheet(sheet: CurrentSheet) {
 }
 
 export async function getPreviousSheet(id: string) {
-  const sheet = await (await db).get("previousSheets", id);
-  if (!sheet) throw new Error("no previous sheet found");
-  return sheet;
+  return (await db).get("previousSheets", id);
 }
 export async function addPreviousSheet(sheet: Omit<PreviousSheet, "date">) {
   const id = nanoid();
@@ -61,4 +59,23 @@ export async function addPreviousSheet(sheet: Omit<PreviousSheet, "date">) {
 
   await (await db).add("previousSheets", { ...sheet, date }, id);
   return id;
+}
+
+export type PreviousSheetWithId = PreviousSheet & { id: string };
+
+export async function listPreviousSheets(): Promise<PreviousSheetWithId[]> {
+  // キーは nanoid で時系列順ではないため、date インデックスを張る代わりに全件取得してから並べ替える（件数が少なく DB バージョンを上げるほどではない）
+  const sheets: PreviousSheetWithId[] = [];
+  let cursor = await (await db)
+    .transaction("previousSheets")
+    .store.openCursor();
+  while (cursor) {
+    sheets.push({ ...cursor.value, id: cursor.key });
+    cursor = await cursor.continue();
+  }
+  return sheets.sort((a, b) => b.date - a.date);
+}
+
+export async function deletePreviousSheet(id: string) {
+  await (await db).delete("previousSheets", id);
 }

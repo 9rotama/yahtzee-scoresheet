@@ -45,7 +45,7 @@ export function calcYahtzee(scoreSels: ScoresYahtzee) {
   return {
     smallTotal,
     bonus,
-    total: smallTotal + bonus + total,
+    total,
   };
 }
 
