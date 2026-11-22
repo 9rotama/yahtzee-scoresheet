@@ -1,4 +1,6 @@
+import { useMutation } from "@tanstack/react-query";
 import { Check, CircleX } from "lucide-react";
+import { useRef } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
@@ -13,7 +15,7 @@ import {
 } from "~/components/ui/drawer";
 import { Width } from "~/components/width";
 import { addPreviousSheet, getCurrentSheet } from "~/lib/db.client";
-import { clearCurrentScores, getCurrentScores } from "../req/index.client";
+import { clearCurrentScores } from "../req/index.client";
 
 type Content = {
   title: string;
@@ -24,17 +26,31 @@ type Content = {
 
 export function CompleteDialog({ isComplete }: { isComplete: boolean }) {
   const navigate = useNavigate();
-  const handleGameCancel = async () => {
-    await clearCurrentScores();
-    navigate("/settings/players");
-  };
+  // isPending だけでは防げない。TanStack Query は状態通知を setTimeout で遅延させるため、
+  // 再描画でボタンが無効化される前に2回目のタップが届きうる
+  const submittingRef = useRef(false);
 
-  const handleGameEnd = async () => {
-    const sheet = await getCurrentSheet();
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (isComplete: boolean) => {
+      if (!isComplete) {
+        await clearCurrentScores();
+        return "/settings/players";
+      }
+      const sheet = await getCurrentSheet();
+      const id = await addPreviousSheet(sheet);
+      await clearCurrentScores();
+      return `/results/${id}`;
+    },
+    onSuccess: (to) => navigate(to),
+    onSettled: () => {
+      submittingRef.current = false;
+    },
+  });
 
-    const id = await addPreviousSheet(sheet);
-    await clearCurrentScores();
-    navigate(`/results/${id}`);
+  const handleSubmit = () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    mutate(isComplete);
   };
 
   const content: Content = {
@@ -74,7 +90,8 @@ export function CompleteDialog({ isComplete }: { isComplete: boolean }) {
             </DrawerClose>
             <Button
               className="font-bold"
-              onClick={isComplete ? handleGameEnd : handleGameCancel}
+              onClick={handleSubmit}
+              disabled={isPending}
             >
               {content.ok}
             </Button>
