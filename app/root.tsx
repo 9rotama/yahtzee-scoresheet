@@ -1,6 +1,7 @@
 import { NuqsAdapter } from "nuqs/adapters/react-router/v8";
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
@@ -10,8 +11,10 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { ThemeProvider } from "./components/theme-provider";
+import { Button } from "./components/ui/button";
 import { queryClient } from "./lib/query-client";
 
 export const links: Route.LinksFunction = () => [
@@ -40,12 +43,14 @@ function startReactScan() {
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Make sure to run react-scan only after hydration
-    startReactScan();
+    if (import.meta.env.DEV) {
+      startReactScan();
+    }
   }, []);
 
   return (
     // next-themes がハイドレーション前に <html> の class と style を書き換えるため、属性の不一致警告を抑える
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ja" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -80,15 +85,16 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = "エラー";
+  let details = "予期しないエラーが発生しました。";
   let stack: string | undefined;
+  const isNotFound = isRouteErrorResponse(error) && error.status === 404;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : "エラー";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "お探しのページが見つかりませんでした。"
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -99,6 +105,19 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
       <p>{details}</p>
+      {/* 戻り先はシート状態で変わるため、固定ルートではなく "/" の振り分けに任せる */}
+      {isNotFound && (
+        <Button
+          variant="secondary"
+          className="w-full h-12 mt-8 font-bold rounded-full"
+          asChild
+        >
+          <Link to="/">
+            <ArrowLeft />
+            ホームに戻る
+          </Link>
+        </Button>
+      )}
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>

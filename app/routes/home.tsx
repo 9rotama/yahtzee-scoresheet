@@ -1,10 +1,10 @@
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { getCurrentScores } from "~/features/playing/req/index.client";
 import type { Route } from "./+types/home";
 
 export function meta() {
-  return [{ title: "yathzee-scoresheet" }];
+  return [{ title: "yahtzee-scoresheet" }];
 }
 
 export async function clientLoader() {

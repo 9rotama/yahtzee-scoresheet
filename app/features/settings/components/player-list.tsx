@@ -1,7 +1,8 @@
-import { Delete, Edit2, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import type { Player } from "../models";
+import { MAX_PLAYERS, type Player } from "../models";
+import { canAddPlayer } from "../utils/player-count";
 import { PlayerListItem } from "./player-list-item";
 
 function Empty() {
@@ -47,11 +48,12 @@ export function PlayerList({ players, onAdd, onDelete, onEdit }: Props) {
         variant="outline"
         className="mt-2 w-full"
         onClick={onAdd}
+        disabled={!canAddPlayer(players.length)}
       >
         <Plus />
       </Button>
       <div className="text-sm text-muted-foreground text-center mt-4">
-        {players.length} / 8
+        {players.length} / {MAX_PLAYERS}
       </div>
     </>
   );
