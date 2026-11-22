@@ -10,7 +10,7 @@
     "dev": "node --env-file-if-exists=.env.local scripts/fetch-illustrations.mjs && react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "lint": "biome lint",
+    "lint": "biome lint --error-on-warnings",
     "format": "biome format",
     "test": "vitest run"
   },

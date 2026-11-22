@@ -94,4 +94,4 @@ lefthook install
 | `pnpm lint` | Biome で lint する |
 | `pnpm format` | Biome でフォーマットを確認する |
 
-GitHub Actions ではプルリクエストと `main` への push のたびに `pnpm test` と `pnpm lint` を実行します。
+GitHub Actions ではプルリクエストと `main` への push のたびに `pnpm test`、`pnpm typecheck`、`pnpm lint` を実行します。`pnpm lint` は警告が 1 件でもあれば失敗します。ビルドは Vercel のデプロイで確認するため CI では実行しません。
