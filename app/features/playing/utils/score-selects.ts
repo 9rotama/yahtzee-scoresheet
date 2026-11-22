@@ -2,8 +2,10 @@ import type { YahtzeeCategories, YamsCategories } from "./categories";
 
 export const diceNum = 5;
 
-export const minBonusYahtzee = 60;
+export const minBonusYahtzee = 63;
 export const minBonusYams = 63;
+export const bonusYahtzee = 35;
+export const bonusYams = 35;
 
 export type Score = number | undefined;
 

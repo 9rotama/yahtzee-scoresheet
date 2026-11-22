@@ -1,5 +1,12 @@
 import type { YahtzeeCategories, YamsCategories } from "./categories";
-import type { ScoresYahtzee, ScoresYams } from "./score-selects";
+import {
+  bonusYahtzee,
+  bonusYams,
+  minBonusYahtzee,
+  minBonusYams,
+  type ScoresYahtzee,
+  type ScoresYams,
+} from "./score-selects";
 import { yahtzeeItems } from "./yahtzee-items";
 import { yamsItems } from "./yams-items";
 
@@ -31,7 +38,7 @@ export function calcYahtzee(scoreSels: ScoresYahtzee) {
     scores.fours +
     scores.fives +
     scores.sixes;
-  const bonus = smallTotal >= 63 ? 35 : 0;
+  const bonus = smallTotal >= minBonusYahtzee ? bonusYahtzee : 0;
   const total =
     smallTotal +
     bonus +
@@ -76,7 +83,7 @@ export function calcYams(scoreSels: ScoresYams) {
     (scores.fours ?? 0) +
     (scores.fives ?? 0) +
     (scores.sixes ?? 0);
-  const bonus = smallTotal >= 63 ? 35 : 0;
+  const bonus = smallTotal >= minBonusYams ? bonusYams : 0;
 
   const plus = scores.plus ?? 0;
   const minus = scores.minus ?? 0;
