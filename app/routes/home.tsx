@@ -12,6 +12,10 @@ export async function clientLoader() {
   return { scores };
 }
 
+export function HydrateFallback() {
+  return null;
+}
+
 export default function Home({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
 
