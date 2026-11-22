@@ -44,7 +44,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <html lang="en">
+    // next-themes がハイドレーション前に <html> の class と style を書き換えるため、属性の不一致警告を抑える
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,7 +53,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="min-h-screen">
-        {children}
+        {/* App 側に置かない: clientLoader を持ち HydrateFallback のないルート（"/"）では SSR で App が描画されず、テーマを当てるインラインスクリプトが HTML に入らない */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -62,18 +71,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <QueryClientProvider client={queryClient}>
-        <NuqsAdapter>
-          <Outlet />
-        </NuqsAdapter>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <NuqsAdapter>
+        <Outlet />
+      </NuqsAdapter>
+    </QueryClientProvider>
   );
 }
 
