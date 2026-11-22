@@ -37,7 +37,7 @@ function SheetSelectContent({
           <div className="flex flex-col gap-1 p-3">
             {selections.map((item, i) => (
               <Button
-                key={item}
+                key={item ?? "none"}
                 variant="ghost"
                 value={item ? item.toString() : "none"}
                 onClick={() => onSelect(i)}

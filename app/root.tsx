@@ -45,7 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     // next-themes がハイドレーション前に <html> の class と style を書き換えるため、属性の不一致警告を抑える
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ja" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -80,15 +80,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = "エラー";
+  let details = "予期しないエラーが発生しました。";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : "エラー";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "お探しのページが見つかりませんでした。"
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;

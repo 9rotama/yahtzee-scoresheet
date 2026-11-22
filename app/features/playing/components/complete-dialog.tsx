@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/drawer";
 import { Width } from "~/components/width";
 import { addPreviousSheet, getCurrentSheet } from "~/lib/db.client";
-import { clearCurrentScores, getCurrentScores } from "../req/index.client";
+import { clearCurrentScores } from "../req/index.client";
 
 type Content = {
   title: string;

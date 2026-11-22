@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 
 export function meta() {
-  return [{ title: "クレジット | yathzee-scoresheet" }];
+  return [{ title: "クレジット | yahtzee-scoresheet" }];
 }
 
 function Section({
