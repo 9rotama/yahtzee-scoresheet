@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Table, TableBody } from "~/components/ui/table";
 import type { Player } from "~/features/settings/models";
-import { setIsCompleteContext } from "~/routes/(playing)/layout";
+import { setIsCompleteContext } from "../contexts/is-complete";
 import { updateCurrentScoresYahtzee } from "../req/index.client";
 import { calcYahtzee } from "../utils/calc";
 import type { YahtzeeCategories } from "../utils/categories";

@@ -1,9 +1,18 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
   "plugins": [
-    { "path": "./scripts/layer-rules.js", "includes": ["app/**"] },
-    { "path": "./scripts/layer-css.grit", "includes": ["app/**"] },
-    { "path": "./scripts/layer-apply.grit", "includes": ["app/**"] },
+    {
+      "path": "./scripts/layer-rules.js",
+      "includes": ["app/**"]
+    },
+    {
+      "path": "./scripts/layer-css.grit",
+      "includes": ["app/**"]
+    },
+    {
+      "path": "./scripts/layer-apply.grit",
+      "includes": ["app/**"]
+    },
     {
       "path": "./scripts/hydrate-fallback.grit",
       "includes": ["app/routes/**"]
@@ -48,5 +57,66 @@
     "parser": {
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["app/features/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/routes",
+                      "~/routes/**",
+                      "**/routes",
+                      "**/routes/**"
+                    ],
+                    "message": "features と components・lib から routes は参照できません。共有するものは参照される側の層へ移してください。"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["app/components/**", "app/lib/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "~/features",
+                      "~/features/**",
+                      "**/features",
+                      "**/features/**"
+                    ],
+                    "message": "components と lib から features は参照できません。共有するものは components・lib・models へ移してください。"
+                  },
+                  {
+                    "group": [
+                      "~/routes",
+                      "~/routes/**",
+                      "**/routes",
+                      "**/routes/**"
+                    ],
+                    "message": "features と components・lib から routes は参照できません。共有するものは参照される側の層へ移してください。"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
