@@ -8,14 +8,17 @@ import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import type { Rule } from "~/features/settings/models";
 import {
+  getCurrentPlayers,
   getCurrentRule,
   updateCurrentRule,
 } from "~/features/settings/req/index.client";
+import { canStartGame } from "~/features/settings/utils/player-count";
 import type { Route } from "./+types/rules";
 
 export async function clientLoader() {
-  const data = await getCurrentRule();
-  return data;
+  const rule = await getCurrentRule();
+  const players = await getCurrentPlayers();
+  return { rule, playerCount: players.length };
 }
 
 export function HydrateFallback() {
@@ -23,10 +26,10 @@ export function HydrateFallback() {
 }
 
 export default function Rules({ loaderData }: Route.ComponentProps) {
-  const [rule, setRule] = useState<Rule>(loaderData || { name: "yahtzee" });
+  const [rule, setRule] = useState<Rule>(loaderData.rule);
   const navigate = useNavigate();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       await updateCurrentRule(rule);
       navigate("/game");
@@ -78,6 +81,7 @@ export default function Rules({ loaderData }: Route.ComponentProps) {
           onClick={() => {
             mutate();
           }}
+          disabled={!canStartGame(loaderData.playerCount) || isPending}
         >
           ゲームを始める <ArrowRight />
         </Button>
