@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Table, TableBody } from "~/components/ui/table";
 import type { Player } from "~/features/settings/models";
-import { setIsCompleteContext } from "~/routes/(playing)/layout";
+import { setIsCompleteContext } from "../contexts/is-complete";
 import { updateCurrentScoresYams } from "../req/index.client";
 import { calcYams } from "../utils/calc";
 import type { YamsCategories } from "../utils/categories";
