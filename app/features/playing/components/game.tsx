@@ -1,6 +1,8 @@
 import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 import type { Player, Rule } from "~/features/settings/models";
 import type { CurrentSheet } from "~/models/sheet";
+import { resolveCurrentPlayerIdx } from "../utils/current-player";
 import type { ScoresYahtzee, ScoresYams } from "../utils/score-selects";
 import { PlayerSwitch } from "./player-switch";
 import { YahtzeeSheet } from "./yahtzee-sheet";
@@ -19,8 +21,14 @@ export function Game({ players, rule, scores }: Props) {
       defaultValue: players[0].id,
     },
   );
-  const currentPlayerIdx = players.findIndex((p) => p.id === currentPlayerId);
+  const currentPlayerIdx = resolveCurrentPlayerIdx(players, currentPlayerId);
   const currentPlayer = players[currentPlayerIdx];
+
+  useEffect(() => {
+    if (currentPlayer.id !== currentPlayerId) {
+      setCurrentPlayerId(currentPlayer.id, { history: "replace" });
+    }
+  }, [currentPlayer.id, currentPlayerId, setCurrentPlayerId]);
 
   const handleRightClick = () => {
     const nextIndex = (currentPlayerIdx + 1) % players.length;

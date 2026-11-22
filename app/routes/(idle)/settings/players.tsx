@@ -11,6 +11,10 @@ import {
   getCurrentPlayers,
   updateCurrentPlayers,
 } from "~/features/settings/req/index.client";
+import {
+  canAddPlayer,
+  canStartGame,
+} from "~/features/settings/utils/player-count";
 import type { Route } from "./+types/players";
 
 export async function clientLoader() {
@@ -26,7 +30,7 @@ export default function Players({ loaderData }: Route.ComponentProps) {
   const [players, setPlayers] = useState<Player[]>(loaderData || []);
   const navigate = useNavigate();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       await updateCurrentPlayers(players);
       navigate("/settings/rules");
@@ -34,6 +38,7 @@ export default function Players({ loaderData }: Route.ComponentProps) {
   });
 
   const handleAddPlayer = () => {
+    if (!canAddPlayer(players.length)) return;
     const newPlayer: Player = {
       id: nanoid(),
       name: `プレイヤー ${players.length + 1}`,
@@ -66,6 +71,7 @@ export default function Players({ loaderData }: Route.ComponentProps) {
         variant="default"
         className="mt-16 w-full h-12 font-bold rounded-full"
         onClick={() => mutate()}
+        disabled={!canStartGame(players.length) || isPending}
       >
         決定してルール選択へ <ArrowRight />
       </Button>
