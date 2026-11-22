@@ -1,10 +1,7 @@
-import { Check, CircleX } from "lucide-react";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { Header } from "~/components/header";
 import { ModeToggle } from "~/components/mode-toggle";
-import { ThemeProvider } from "~/components/theme-provider";
-import { Button } from "~/components/ui/button";
 import { Width } from "~/components/width";
 import { CompleteDialog } from "~/features/playing/components/complete-dialog";
 import {
@@ -12,7 +9,7 @@ import {
   setIsCompleteContext,
 } from "~/features/playing/contexts/is-complete";
 
-export default function IdleLayout() {
+export default function PlayingLayout() {
   const [isComplete, setIsComplete] = useState(false);
   return (
     <>

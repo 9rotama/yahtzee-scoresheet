@@ -16,8 +16,6 @@ export default [
       route("histories", "routes/(idle)/histories/index.tsx"),
       route("histories/:id", "routes/(idle)/histories/detail.tsx"),
       route("credits", "routes/(idle)/credits.tsx"),
-
-      //route("results", "routes/home.tsx"),
     ]),
     layout("routes/(playing)/layout.tsx", [
       route("game", "routes/(playing)/game.tsx"),

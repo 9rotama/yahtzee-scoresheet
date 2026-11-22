@@ -19,7 +19,7 @@ export async function clientLoader({ params }: Route.LoaderArgs) {
 }
 
 export function meta() {
-  return [{ title: "プレー履歴 | yathzee-scoresheet" }];
+  return [{ title: "プレー履歴 | yahtzee-scoresheet" }];
 }
 
 export function HydrateFallback() {
