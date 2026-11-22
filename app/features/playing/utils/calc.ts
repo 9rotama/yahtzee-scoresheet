@@ -1,5 +1,12 @@
 import type { YahtzeeCategories, YamsCategories } from "./categories";
-import type { ScoresYahtzee, ScoresYams } from "./score-selects";
+import {
+  bonusYahtzee,
+  bonusYams,
+  minBonusYahtzee,
+  minBonusYams,
+  type ScoresYahtzee,
+  type ScoresYams,
+} from "./score-selects";
 import { yahtzeeItems } from "./yahtzee-items";
 import { yamsItems } from "./yams-items";
 
@@ -31,7 +38,7 @@ export function calcYahtzee(scoreSels: ScoresYahtzee) {
     scores.fours +
     scores.fives +
     scores.sixes;
-  const bonus = smallTotal >= 63 ? 35 : 0;
+  const bonus = smallTotal >= minBonusYahtzee ? bonusYahtzee : 0;
   const total =
     smallTotal +
     bonus +
@@ -50,15 +57,15 @@ export function calcYahtzee(scoreSels: ScoresYahtzee) {
 }
 
 export function calcYams(scoreSels: ScoresYams) {
-  const scores: { [key in YamsCategories]: number } = {
+  const scores: {
+    [key in Exclude<YamsCategories, "plus" | "minus">]: number;
+  } = {
     aces: yamsItems.aces.selections[scoreSels.aces] ?? 0,
     twos: yamsItems.twos.selections[scoreSels.twos] ?? 0,
     threes: yamsItems.threes.selections[scoreSels.threes] ?? 0,
     fours: yamsItems.fours.selections[scoreSels.fours] ?? 0,
     fives: yamsItems.fives.selections[scoreSels.fives] ?? 0,
     sixes: yamsItems.sixes.selections[scoreSels.sixes] ?? 0,
-    plus: yamsItems.plus.selections[scoreSels.plus] ?? 0,
-    minus: yamsItems.minus.selections[scoreSels.minus] ?? 0,
     "four-dice": yamsItems["four-dice"].selections[scoreSels["four-dice"]] ?? 0,
     "full-house":
       yamsItems["full-house"].selections[scoreSels["full-house"]] ?? 0,
@@ -76,10 +83,11 @@ export function calcYams(scoreSels: ScoresYams) {
     (scores.fours ?? 0) +
     (scores.fives ?? 0) +
     (scores.sixes ?? 0);
-  const bonus = smallTotal >= 63 ? 35 : 0;
+  const bonus = smallTotal >= minBonusYams ? bonusYams : 0;
 
-  const plus = scores.plus ?? 0;
-  const minus = scores.minus ?? 0;
+  // 未選択を 0 に丸めると delta が常に数値になり、UI で未入力（"-"）を表せなくなるため undefined のまま扱う
+  const plus = yamsItems.plus.selections[scoreSels.plus];
+  const minus = yamsItems.minus.selections[scoreSels.minus];
 
   const delta =
     plus !== undefined && minus !== undefined
