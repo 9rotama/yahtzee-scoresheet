@@ -1,13 +1,16 @@
+import { redirect } from "react-router";
+import { Game } from "~/features/playing/components/game";
+import { getCurrentScores } from "~/features/playing/req/index.client";
 import {
   getCurrentPlayers,
   getCurrentRule,
 } from "~/features/settings/req/index.client";
+import { canStartGame } from "~/features/settings/utils/player-count";
 import type { Route } from "./+types/game";
-import { Game } from "~/features/playing/components/game";
-import { getCurrentScores } from "~/features/playing/req/index.client";
 
 export async function clientLoader() {
   const players = await getCurrentPlayers();
+  if (!canStartGame(players.length)) throw redirect("/settings/players");
   const rule = await getCurrentRule();
   const scores = await getCurrentScores();
 
@@ -20,7 +23,6 @@ export function HydrateFallback() {
 
 export default function GamePage({ loaderData }: Route.ComponentProps) {
   const { players, rule, scores } = loaderData;
-  if (players.length === 0) return;
   return (
     <div className="pt-1">
       <Game players={players} rule={rule} scores={scores} />

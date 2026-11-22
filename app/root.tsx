@@ -43,7 +43,9 @@ function startReactScan() {
 export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Make sure to run react-scan only after hydration
-    startReactScan();
+    if (import.meta.env.DEV) {
+      startReactScan();
+    }
   }, []);
 
   return (

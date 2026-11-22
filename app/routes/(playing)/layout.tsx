@@ -1,14 +1,13 @@
-import { createContext, type Dispatch, useState } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router";
 import { Header } from "~/components/header";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Width } from "~/components/width";
 import { CompleteDialog } from "~/features/playing/components/complete-dialog";
-
-export const isCompleteContext = createContext<boolean>(false);
-export const setIsCompleteContext = createContext<
-  Dispatch<React.SetStateAction<boolean>>
->(() => {});
+import {
+  isCompleteContext,
+  setIsCompleteContext,
+} from "~/features/playing/contexts/is-complete";
 
 export default function PlayingLayout() {
   const [isComplete, setIsComplete] = useState(false);

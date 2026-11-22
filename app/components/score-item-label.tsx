@@ -1,8 +1,10 @@
 import scoreIcons from "~/assets/score-icons.svg?no-inline";
+// biome-ignore-start lint/style/noRestrictedImports: 役の型を components 側へ移す変更は import の方向の検査を入れる作業の範囲外なので、移すまでの間だけ許容する
 import type {
   YahtzeeCategories,
   YamsCategories,
 } from "~/features/playing/utils/categories";
+// biome-ignore-end lint/style/noRestrictedImports: 上の許容はこの import だけに限る
 import { cn } from "~/lib/utils";
 
 export type ScoreItemKey =
