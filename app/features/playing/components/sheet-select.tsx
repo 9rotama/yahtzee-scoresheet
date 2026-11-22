@@ -39,7 +39,7 @@ function SheetSelectContent({
               <Button
                 key={item ?? "none"}
                 variant="ghost"
-                value={item ? item.toString() : "none"}
+                value={item === undefined ? "none" : item.toString()}
                 onClick={() => onSelect(i)}
                 className={cn(
                   "relative",
