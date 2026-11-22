@@ -30,7 +30,7 @@ export function CompleteDialog({ isComplete }: { isComplete: boolean }) {
   // 再描画でボタンが無効化される前に2回目のタップが届きうる
   const submittingRef = useRef(false);
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: async (isComplete: boolean) => {
       if (!isComplete) {
         await clearCurrentScores();
@@ -42,7 +42,9 @@ export function CompleteDialog({ isComplete }: { isComplete: boolean }) {
       return `/results/${id}`;
     },
     onSuccess: (to) => navigate(to),
-    onSettled: () => {
+    // 成功時には解除しない。遷移は次のルートの clientLoader を待つので、
+    // 保存が終わってからダイアログが消えるまでの間にも押せてしまう
+    onError: () => {
       submittingRef.current = false;
     },
   });
@@ -91,7 +93,7 @@ export function CompleteDialog({ isComplete }: { isComplete: boolean }) {
             <Button
               className="font-bold"
               onClick={handleSubmit}
-              disabled={isPending}
+              disabled={isPending || isSuccess}
             >
               {content.ok}
             </Button>
