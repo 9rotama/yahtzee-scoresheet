@@ -1,6 +1,7 @@
 import { NuqsAdapter } from "nuqs/adapters/react-router/v8";
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
@@ -10,8 +11,10 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { ThemeProvider } from "./components/theme-provider";
+import { Button } from "./components/ui/button";
 import { queryClient } from "./lib/query-client";
 
 export const links: Route.LinksFunction = () => [
@@ -83,6 +86,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "エラー";
   let details = "予期しないエラーが発生しました。";
   let stack: string | undefined;
+  const isNotFound = isRouteErrorResponse(error) && error.status === 404;
 
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "エラー";
@@ -99,6 +103,19 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
       <p>{details}</p>
+      {/* 戻り先はシート状態で変わるため、固定ルートではなく "/" の振り分けに任せる */}
+      {isNotFound && (
+        <Button
+          variant="secondary"
+          className="w-full h-12 mt-8 font-bold rounded-full"
+          asChild
+        >
+          <Link to="/">
+            <ArrowLeft />
+            ホームに戻る
+          </Link>
+        </Button>
+      )}
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>
