@@ -22,10 +22,6 @@ export function meta() {
   return [{ title: "プレー履歴 | yahtzee-scoresheet" }];
 }
 
-export function HydrateFallback() {
-  return null;
-}
-
 export default function HistoryDetail({ loaderData }: Route.ComponentProps) {
   const { id, sheet, ranking } = loaderData;
   const navigate = useNavigate();

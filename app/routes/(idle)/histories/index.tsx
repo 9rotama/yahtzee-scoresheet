@@ -21,10 +21,6 @@ export function meta() {
   return [{ title: "プレー履歴 | yahtzee-scoresheet" }];
 }
 
-export function HydrateFallback() {
-  return null;
-}
-
 export default function Histories({ loaderData }: Route.ComponentProps) {
   if (loaderData.length === 0) {
     return (

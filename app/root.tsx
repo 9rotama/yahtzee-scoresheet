@@ -13,9 +13,11 @@ import "./app.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
+import { Header } from "./components/header";
 import { ThemeProvider } from "./components/theme-provider";
 import { Button } from "./components/ui/button";
 import { queryClient } from "./lib/query-client";
+import { themeInitScript, themeStorageKey } from "./lib/theme";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -30,7 +32,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-// 静的 import だと SSR 時に依存の react-grab が Node で JSON を import attribute なしで読み込みクラッシュするため、クライアントでのみ動的 import する
+// 静的 import だとビルド時に index.html を Node で描画する際、依存の react-grab が Node で JSON を import attribute なしで読み込みクラッシュするため、クライアントでのみ動的 import する
 // コンポーネント内に import() を直接書かない: React Compiler が import() 式を未サポートで Layout ごと最適化をスキップするため
 function startReactScan() {
   import("react-scan").then(({ scan }) => {
@@ -49,18 +51,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    // next-themes がハイドレーション前に <html> の class と style を書き換えるため、属性の不一致警告を抑える
+    // テーマ初期化スクリプトがハイドレーション前に <html> の class と style を書き換えるため、属性の不一致警告を抑える
     <html lang="ja" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* CSS や JS の読み込みより前に置き、初回描画の時点でテーマが当たっているようにする */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: ビルド時に固定される自前のスクリプトで、外部入力を含まない
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
         <Meta />
         <Links />
       </head>
       <body className="min-h-screen">
-        {/* App 側に置かない: clientLoader を持ち HydrateFallback のないルート（"/"）では SSR で App が描画されず、テーマを当てるインラインスクリプトが HTML に入らない */}
+        {/* App 側に置かない: 初回読み込み中は App の代わりに HydrateFallback が描画されるため、両方を包める Layout に置く */}
         <ThemeProvider
           attribute="class"
+          storageKey={themeStorageKey}
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
@@ -72,6 +80,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   );
+}
+
+// SPA モードでは HydrateFallback をルートにしか置けず、index.html にはこれが書き出される
+// JS の読み込みと clientLoader の完了までの間に表示されるため、どのレイアウトにも共通するヘッダーの枠だけを出して画面が真っ白にならないようにする
+export function HydrateFallback() {
+  return <Header>{null}</Header>;
 }
 
 export default function App() {

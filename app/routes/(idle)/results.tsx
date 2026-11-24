@@ -20,10 +20,6 @@ export function meta() {
   return [{ title: "結果発表 | yahtzee-scoresheet" }];
 }
 
-export function HydrateFallback() {
-  return null;
-}
-
 export default function Results({ loaderData }: Route.ComponentProps) {
   const { sheet, ranking } = loaderData;
 
