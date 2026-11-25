@@ -22,10 +22,6 @@ export async function clientLoader() {
   return data;
 }
 
-export function HydrateFallback() {
-  return null;
-}
-
 export default function Players({ loaderData }: Route.ComponentProps) {
   const [players, setPlayers] = useState<Player[]>(loaderData || []);
   const navigate = useNavigate();

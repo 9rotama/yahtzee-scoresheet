@@ -17,10 +17,6 @@ export async function clientLoader() {
   return { players, rule, scores };
 }
 
-export function HydrateFallback() {
-  return null;
-}
-
 export default function GamePage({ loaderData }: Route.ComponentProps) {
   const { players, rule, scores } = loaderData;
   return (

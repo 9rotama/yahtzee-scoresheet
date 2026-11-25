@@ -21,10 +21,6 @@ export async function clientLoader() {
   return { rule, playerCount: players.length };
 }
 
-export function HydrateFallback() {
-  return null;
-}
-
 export default function Rules({ loaderData }: Route.ComponentProps) {
   const [rule, setRule] = useState<Rule>(loaderData.rule);
   const navigate = useNavigate();

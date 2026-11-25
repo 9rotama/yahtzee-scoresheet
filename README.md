@@ -34,6 +34,7 @@ https://yahtzee-scoresheet-five.vercel.app
 
 ## データの保存について
 
+アプリはサーバで描画しない SPA で、静的ファイルとして配信しています。
 得点とプレイヤーの情報はブラウザの IndexedDB に保存します。
 サーバには送信しません。
 そのため、別の端末やブラウザとは記録を共有できません。
@@ -75,6 +76,8 @@ Docker イメージをビルドする場合は、`BLOB_READ_WRITE_TOKEN` を環�
 docker build --secret id=blob_token,env=BLOB_READ_WRITE_TOKEN .
 ```
 
+イメージは `build/client/` を nginx で配信します（ポート 80）。
+
 pre-commit フックを有効にするには、lefthook を別途インストールしてから次を実行します。
 コミット時に、ステージしたファイルへ `biome check --write` がかかります。
 
@@ -87,8 +90,8 @@ lefthook install
 | コマンド | 内容 |
 | --- | --- |
 | `pnpm dev` | 開発サーバを起動する |
-| `pnpm build` | 本番用にビルドする（出力先は `build/`） |
-| `pnpm start` | ビルド結果をサーバで起動する（既定のポートは 3000 で、`PORT` で変更できる） |
+| `pnpm build` | 本番用にビルドする（配信するのは `build/client/` の静的ファイル） |
+| `pnpm start` | ビルド結果を `vite preview` で配信して確認する（ポートは 3000） |
 | `pnpm test` | Vitest でテストを実行する |
 | `pnpm typecheck` | ルートの型を生成してから型検査する |
 | `pnpm lint` | Biome で lint する |

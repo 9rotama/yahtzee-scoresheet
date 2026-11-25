@@ -1,8 +1,6 @@
 language js
 
-JsExport() as $loader where {
-  $loader <: r"(?s)\s*export\s+(?:async\s+)?(?:function\s+clientLoader\b|(?:const|let)\s+clientLoader\b).*",
-  $loader <: within JsModule() as $module,
-  not $module <: r"(?s).*\bexport\s+(?:function\s+HydrateFallback\b|(?:const|let)\s+HydrateFallback\b).*",
-  register_diagnostic(span=$loader, message="clientLoader を持つルートには HydrateFallback を定義してください。")
+JsExport() as $fallback where {
+  $fallback <: r"(?s)\s*export\s+(?:function\s+HydrateFallback\b|(?:const|let)\s+HydrateFallback\b).*",
+  register_diagnostic(span=$fallback, message="SPA モードでは HydrateFallback を app/root.tsx 以外のルートに定義できません。")
 }
